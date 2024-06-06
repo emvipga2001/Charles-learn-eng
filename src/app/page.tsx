@@ -1,6 +1,31 @@
+'use client';
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [darkmode, setDarkmode] = useState<boolean>(false);
+  const lightMode = 'light';
+  const darkMode = 'dark';
+
+
+  useEffect(()=>{
+    const localStorageDarkmode = localStorage.getItem('darkmode');
+    if(localStorageDarkmode){
+      document.documentElement.setAttribute('class', localStorageDarkmode.toString());
+      localStorage.setItem('darkmode', localStorageDarkmode.toString());
+      setDarkmode(localStorageDarkmode === darkMode);
+    }else{
+      document.documentElement.setAttribute('class', lightMode);
+      localStorage.setItem('darkmode', lightMode);
+    }
+  },[]);
+  
+  function handleDarkMode(){
+    document.documentElement.setAttribute('class', !darkmode ? darkMode : lightMode);
+    localStorage.setItem('darkmode', !darkmode ? darkMode : lightMode);
+    setDarkmode(!darkmode);
+  }
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
@@ -39,7 +64,7 @@ export default function Home() {
         />
       </div>
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
+      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-5 lg:text-left">
         <a
           href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
           className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
@@ -107,6 +132,12 @@ export default function Home() {
             Instantly deploy your Next.js site to a shareable URL with Vercel.
           </p>
         </a>
+        <label htmlFor="toggle" className="px-5 py-4 cursor-pointer inline-block">
+          <input type="checkbox" name="" className="darkmode-handle hidden" id="toggle" checked={darkmode} onChange={handleDarkMode}/>
+          <div className="border bg-transparent rounded-2xl h-[30px] w-[60px] p-1 transition-colors">
+            <div className="rounded-full bg-white w-5 h-5 transition-transform darkmode-spinner"></div>
+          </div>
+        </label>
       </div>
     </main>
   );
