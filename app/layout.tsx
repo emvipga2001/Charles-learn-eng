@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
+import ButtonDarkMode from "../ui/button-dark-mode";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +14,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body>
+        <div className="mx-auto text-center p-5 min-h-screen bg-white text-black dark:bg-black dark:text-white transition-colors">
+          {children}
+          <ButtonDarkMode />
+        </div>
+      </body>
     </html>
   );
 }
