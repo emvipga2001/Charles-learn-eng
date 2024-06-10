@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FormattedListWord } from "../../lib/definitions";
+import clsx from "clsx";
 
 export default function RenderWord({
   params,
@@ -8,7 +9,14 @@ export default function RenderWord({
 }) {
   const [listWords, setListWords] = useState<FormattedListWord[]>(params);
   const [shuffledWord, setShuffledWord] = useState<FormattedListWord[]>();
+  const [isError, setIsError] = useState({
+    error: false,
+    index: -1,
+    type: 0
+  });
 
+  const Eng = 1;
+  const Vie = 2;
   var idEng = 0;
   var idVie = 0;
   var indexEng = 0;
@@ -21,8 +29,8 @@ export default function RenderWord({
   }, []);
 
   function compareWord(type: number, id: number, index: number) {
-    type === 1 ? (idEng = id) : (idVie = id);
-    type === 1 ? (indexEng = index) : (indexVie = index);
+    type === Eng ? (idEng = id) : (idVie = id);
+    type === Eng ? (indexEng = index) : (indexVie = index);
 
     if (idEng != 0 && idVie != 0) {
       if (idEng === idVie) {
@@ -36,6 +44,9 @@ export default function RenderWord({
         setListWords(shuffledList);
         shuffledWordList[indexVie] = shuffledList[indexEng];
         setShuffledWord(shuffledWordList);
+        setIsError({ error: false, index: -1, type: 0 })
+      } else {
+        setIsError({ error: true, index: type === Eng ? indexEng : indexVie, type: type })
       }
       idEng = 0;
       idVie = 0;
@@ -66,30 +77,14 @@ export default function RenderWord({
     <div className="mt-5 lg:mt-2 lg:mx-40 grid grid-cols-2 gap-5">
       <div>
         {listWords?.slice(0, 5).map((word, index) => (
-          <div key={index + "ENG"}>
+          <div key={index + "ENG"} >
             <button
-              onClick={() => compareWord(1, word.id, index)}
-              className="
-              text-center
-              mt-5
-              text-7xl
-              transition-all
-              border
-              rounded-2xl
-              p-5
-              cursor-pointer
-              border-black
-              hover:shadow-lg
-              dark:border-white
-              dark:shadow-gray-400
-              lg:scale-75
-              lg:mt-0
-              lg:text-5xl
-              hover:bg-blue-500
-              focus:bg-blue-500
-              focus:text-white
-              hover:text-white
-            "
+              onClick={() => compareWord(Eng, word.id, index)}
+              className={clsx(
+                "text-center mt-5 text-7xl transition-all border w-full rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:scale-75 lg:mt-0 lg:text-5xl focus:bg-blue-500 focus:text-white hover:bg-blue-500 hover:text-white",
+                {
+                  'bg-red-700 focus:bg-red-700 animate-shake': isError.error && isError.index == index && isError.type == Eng
+                })}
             >
               {word.english_word}
             </button>
@@ -100,28 +95,12 @@ export default function RenderWord({
         {shuffledWord?.map((word, index) => (
           <div key={index + "VIE"}>
             <button
-              onClick={() => compareWord(2, word.id, index)}
-              className="
-              text-center
-              mt-5
-              text-7xl
-              transition-all
-              border
-              rounded-2xl
-              p-5
-              cursor-pointer
-              border-black
-              hover:shadow-lg
-              dark:border-white
-              dark:shadow-gray-400
-              lg:scale-75
-              lg:mt-0
-              lg:text-5xl
-              focus:bg-blue-500
-              focus:text-white
-              hover:bg-blue-500
-              hover:text-white
-            "
+              onClick={() => compareWord(Vie, word.id, index)}
+              className={clsx(
+                "text-center mt-5 text-7xl transition-all w-full border rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:scale-75 lg:mt-0 lg:text-5xl focus:bg-blue-500 focus:text-white hover:bg-blue-500 hover:text-white",
+                {
+                  'bg-red-700 focus:bg-red-700 animate-shake': isError.error && isError.index == index && isError.type == Vie
+                })}
             >
               {word.vietnamese_word}
             </button>
