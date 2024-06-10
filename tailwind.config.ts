@@ -18,6 +18,7 @@ const config: Config = {
     },
     animation: {
       'shake': 'shake 0.82s cubic-bezier(.36,.07,.19,.97) both',
+      'disable-word': 'disable-word 5s both'
     },
     keyframes: {
       'shake': {
@@ -33,6 +34,14 @@ const config: Config = {
         '40%, 60%': {
           transform: 'translate3d(4px, 0, 0)'
         }
+      },
+      'disable-word':{
+        '50%':{
+          opacity: '0'
+        },
+        '100%':{
+          opacity: '1'
+        },
       }
     }
   },
