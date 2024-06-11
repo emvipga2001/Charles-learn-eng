@@ -19,7 +19,7 @@ export default function BodyComponent({ listWord }: {
       timer = setTimeout(() => {
         setCountdown(countdown - 1);
       }, 1000);
-    } else if (countdown == 0) {
+    } else if (isActive && countdown == 0) {
       setIsActive(false);
       setIsStart(true);
     }
