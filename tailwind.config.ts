@@ -42,6 +42,9 @@ const config: Config = {
         },
       },
       'undisable-word':{
+        '50%':{
+          opacity: '0'
+        },
         '100%':{
           opacity: '1'
         },
