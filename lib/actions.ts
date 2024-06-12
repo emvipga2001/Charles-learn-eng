@@ -6,6 +6,7 @@ import path from 'path';
 
 const FormSchema = z.object({
   id: z.number(),
+  compare_id: z.number(),
   english_word: z.string(),
   vietnamese_word: z.string()
 });
