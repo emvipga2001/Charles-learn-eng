@@ -18,7 +18,23 @@ export default function RenderWord({
   const [indexVie,setIndexVie] = useState(0);
   const [idCompareEng,setIdCompareEng] = useState(0);
   const [idCompareVie,setIdCompareVie] = useState(0);
-  const [isEnd, setIsEnd] = useState({ choice: false, indexEng: -1, indexVie: -1 });
+  const [isEndEng, setIsEndEng] = useState([
+    { endDisable: false },
+    { endDisable: false },
+    { endDisable: false },
+    { endDisable: false },
+    { endDisable: false },
+    { endDisable: false }
+  ]);
+
+  const [isEndVie, setIsEndVie] = useState([
+    { endDisable: false },
+    { endDisable: false },
+    { endDisable: false },
+    { endDisable: false },
+    { endDisable: false },
+    { endDisable: false }
+  ]);
 
   const Eng = 1;
   const Vie = 2;
@@ -67,7 +83,7 @@ export default function RenderWord({
 
   function duplicateList(listWord: FormattedListWord[]) {
     const shuffledList = [...listWord];
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 0; i++) {
       const j = Math.floor(Math.random() * shuffledList.length);
       const newElement: FormattedListWord ={
         ...shuffledList[j],
@@ -105,6 +121,19 @@ export default function RenderWord({
       if (checkIdCompareEng === checkIdCompareVie) {
         setIsCountChange(++countChange);
         setIsError({ error: false, indexEng: -1, indexVie: -1 })
+        if(listWords.length <= 6){
+          setIsEndEng(preVal => {
+            const updateData = preVal;
+            updateData[checkIndexEng].endDisable = true;
+            return updateData;
+          });
+          setIsEndVie(preVal => {
+            const updateData = preVal;
+            updateData[checkIndexVie].endDisable = true;
+            return updateData;
+          });
+          return;
+        }
         setIsDisable({ disable: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
         if (countChange == 1) {
           localStorage.setItem("cancelPromise", "false")
@@ -166,8 +195,9 @@ export default function RenderWord({
                   'opacity-[1] animate-disable-word': isDisable.indexEng == index,
                   'opacity-[0] animate-undisable-word': isDisable.indexEng !== index,
                   'bg-transparent': !isError.error && isError.indexEng !== index,
+                  '!opacity-50': isEndEng[index].endDisable,
                 })}
-              disabled={isDisable.indexEng == index}
+              disabled={isDisable.indexEng == index || isEndEng[index].endDisable}
             >
               {word.english_word}
             </button>
@@ -188,8 +218,9 @@ export default function RenderWord({
                   'opacity-[1] animate-disable-word': isDisable.indexVie == index,
                   'opacity-[0] animate-undisable-word': isDisable.indexVie !== index,
                   'bg-transparent': !isError.error && isError.indexVie !== index,
+                  '!opacity-50': isEndVie[index].endDisable
                 })}
-              disabled={isDisable.disable && isDisable.indexVie == index}
+              disabled={isDisable.disable && isDisable.indexVie == index || isEndVie[index].endDisable}
             >
               {word.vietnamese_word}
             </button>
