@@ -18,6 +18,7 @@ export default function RenderWord({
   const [indexVie,setIndexVie] = useState(0);
   const [idCompareEng,setIdCompareEng] = useState(0);
   const [idCompareVie,setIdCompareVie] = useState(0);
+  const [cancelPromise, setCancelPromise] = useState(0);
   const [isEndEng, setIsEndEng] = useState([
     { endDisable: false },
     { endDisable: false },
@@ -26,7 +27,6 @@ export default function RenderWord({
     { endDisable: false },
     { endDisable: false }
   ]);
-
   const [isEndVie, setIsEndVie] = useState([
     { endDisable: false },
     { endDisable: false },
@@ -42,7 +42,7 @@ export default function RenderWord({
   useEffect(() => {
     const finishList = handleShuffledList(duplicateList(listWords));
     setListWords(finishList);
-    setShuffledWord(handleShuffledList(finishList.slice(0, 6)));
+    setShuffledWord(handleShuffledList(finishList.slice(0, 5)));
   }, []);
 
   useEffect(() => {
@@ -62,9 +62,8 @@ export default function RenderWord({
   }, [isError]);
 
   // useEffect(() => {
-  //   console.log(listWords);
-  //   console.log("------useEffect---------");
-  // }, [listWords]);
+  //   console.log(cancelPromise);
+  // }, [cancelPromise]);
   
   useEffect(() => {
     if (isHandleChoice == 10 || isHandleChoice == 2 || isHandleChoice == 18) {
@@ -136,7 +135,8 @@ export default function RenderWord({
         }
         setIsDisable({ disable: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
         if (countChange == 1) {
-          localStorage.setItem("cancelPromise", "false")
+          localStorage.setItem("cancelPromise", "false");
+          setCancelPromise(1);
           let shuffledList = [...listWords];
           let shuffledWordList = [...shuffledWord!];
           setIsChoice({ choice: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
@@ -144,21 +144,23 @@ export default function RenderWord({
           shuffledList.splice(shuffledList.length - 1, 1);
           shuffledWordList[checkIndexVie] = shuffledList[checkIndexEng];
           await new Promise(resolve => setTimeout(resolve, 1000));
-          if (localStorage.getItem("cancelPromise") == "false") {
+          const isCountChange = cancelPromise == 1;
+          if (isCountChange) {
             setListWords(shuffledList);
             setShuffledWord(shuffledWordList);
             setIsCountChange(0);
             setIsDisable({ disable: false, indexEng: -1, indexVie: -1 })
           }
         } else if (countChange == 2) {
-          localStorage.setItem("cancelPromise", "true")
+          localStorage.setItem("cancelPromise", "true");
+          setCancelPromise(2);
           const shuffledList = [...listWords];
-          const shuffledWordList = [...shuffledWord!];
           [shuffledList[isChoice.indexEng], shuffledList[shuffledList.length - 1]] = [shuffledList[shuffledList.length - 1], shuffledList[isChoice.indexEng]];
           shuffledList.splice(shuffledList.length - 1, 1);
           setListWords(shuffledList);
           
           const newShuffledList = [...shuffledList];
+          const shuffledWordList = [...shuffledWord!];
           [newShuffledList[checkIndexEng], newShuffledList[newShuffledList.length - 1]] = [newShuffledList[newShuffledList.length - 1], newShuffledList[checkIndexEng]];
           newShuffledList.splice(newShuffledList.length - 1, 1);
           shuffledWordList[isChoice.indexVie] = newShuffledList[checkIndexEng];
@@ -168,7 +170,7 @@ export default function RenderWord({
           newShuffledWordList[checkIndexVie] = newShuffledList[isChoice.indexEng];
           setIsChoice({ choice: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
 
-          await new Promise(resolve => setTimeout(resolve, 800));
+          await new Promise(resolve => setTimeout(resolve, 1000));
           setListWords(newShuffledList);
           setShuffledWord(newShuffledWordList);
           setIsDisable({ disable: false, indexEng: -1, indexVie: -1 })
@@ -182,8 +184,8 @@ export default function RenderWord({
   return (
     <div className="mt-5 lg:mt-2 lg:mx-40 grid grid-cols-2 gap-5">
       <div>
-        {listWords?.slice(0, 6).map((word, index) => (
-          <div key={word.id + "ENG"} className={clsx({
+        {listWords?.slice(0, 5).map((word, index) => (
+          <div key={index + "ENG"} className={clsx({
             'animate-shake': isError.error && isError.indexEng == index,
           })}>
             <button
@@ -205,8 +207,8 @@ export default function RenderWord({
         ))}
       </div>
       <div>
-        {shuffledWord?.map((word, index) => (
-          <div key={word.id + "VIE"} className={clsx({
+        {shuffledWord?.slice(0, 5).map((word, index) => (
+          <div key={index + "VIE"} className={clsx({
             'animate-shake': isError.error && isError.indexVie == index,
           })}>
             <button
