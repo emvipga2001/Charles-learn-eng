@@ -83,7 +83,7 @@ export default function RenderWord({
 
   function duplicateList(listWord: FormattedListWord[]) {
     const shuffledList = [...listWord];
-    for (let i = 0; i < 0; i++) {
+    for (let i = 0; i < 10; i++) {
       const j = Math.floor(Math.random() * shuffledList.length);
       const newElement: FormattedListWord ={
         ...shuffledList[j],
