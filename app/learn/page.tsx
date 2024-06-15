@@ -1,4 +1,4 @@
-import { getListWord } from "../../lib/actions";
+import { getListWord } from "../../lib/data";
 import HeaderComponent from "../../ui/header-component";
 import BodyComponent from "../../ui/learn/body-component";
 

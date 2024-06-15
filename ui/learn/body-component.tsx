@@ -11,7 +11,7 @@ export default function BodyComponent({ listWord }: {
 }) {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number>(0);
-  const [isStart, setIsStart] = useState<boolean>(false);
+  const [isStart, setIsStart] = useState<boolean>(true);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;

@@ -14,12 +14,27 @@ export default function RenderWord({
   const [isDisable, setIsDisable] = useState({ disable: false, indexEng: -1, indexVie: -1 });
   const [isChoice, setIsChoice] = useState({ choice: false, indexEng: -1, indexVie: -1 });
   const [isHandleChoice,setIsHandleChoice] = useState(0);
-  const [idEng,setIdEng] = useState(0);
-  const [idVie,setIdVie] = useState(0);
   const [indexEng,setIndexEng] = useState(0);
   const [indexVie,setIndexVie] = useState(0);
   const [idCompareEng,setIdCompareEng] = useState(0);
   const [idCompareVie,setIdCompareVie] = useState(0);
+  const [isEndEng, setIsEndEng] = useState([
+    { endDisable: false },
+    { endDisable: false },
+    { endDisable: false },
+    { endDisable: false },
+    { endDisable: false },
+    { endDisable: false }
+  ]);
+
+  const [isEndVie, setIsEndVie] = useState([
+    { endDisable: false },
+    { endDisable: false },
+    { endDisable: false },
+    { endDisable: false },
+    { endDisable: false },
+    { endDisable: false }
+  ]);
 
   const Eng = 1;
   const Vie = 2;
@@ -27,7 +42,7 @@ export default function RenderWord({
   useEffect(() => {
     const finishList = handleShuffledList(duplicateList(listWords));
     setListWords(finishList);
-    setShuffledWord(handleShuffledList(finishList.slice(0, 5)));
+    setShuffledWord(handleShuffledList(finishList.slice(0, 6)));
   }, []);
 
   useEffect(() => {
@@ -46,8 +61,13 @@ export default function RenderWord({
     }
   }, [isError]);
 
+  // useEffect(() => {
+  //   console.log(listWords);
+  //   console.log("------useEffect---------");
+  // }, [listWords]);
+  
   useEffect(() => {
-    if (isHandleChoice == 2 || isHandleChoice == 4) {
+    if (isHandleChoice == 10 || isHandleChoice == 2 || isHandleChoice == 18) {
       setIsHandleChoice(0);
     }
   }, [isHandleChoice]);
@@ -63,7 +83,7 @@ export default function RenderWord({
 
   function duplicateList(listWord: FormattedListWord[]) {
     const shuffledList = [...listWord];
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 0; i++) {
       const j = Math.floor(Math.random() * shuffledList.length);
       const newElement: FormattedListWord ={
         ...shuffledList[j],
@@ -77,29 +97,43 @@ export default function RenderWord({
   async function compareWord(type: number, compare_id: number, index: number, id: number) {
     var countChange = isCountChange;
     var handleChoice = isHandleChoice;
+    var checkIdCompareEng = idCompareEng;
+    var checkIdCompareVie = idCompareVie;
+
     if(type === Eng){
-      handleChoice = handleChoice + 1;
       setIdCompareEng(compare_id);
       setIndexEng(index);
-      setIdEng(id);
+      checkIdCompareEng = compare_id;
+      handleChoice = handleChoice + 1;
     }else{
-      handleChoice = handleChoice + 2;
       setIdCompareVie(compare_id);
       setIndexVie(index);
-      setIdVie(id);
+      checkIdCompareVie = compare_id;
+      handleChoice = handleChoice + 9;
     }
     setIsHandleChoice(handleChoice);
-    
-    const checkIdCompareEng = type === Eng ? compare_id : idCompareEng;
-    const checkIdCompareVie = type === Eng ? idCompareVie : compare_id;
     const checkIndexEng = type === Eng ? index : indexEng;
     const checkIndexVie = type === Eng ? indexVie : index;
     
-    if (handleChoice == 3) {
-      setIsHandleChoice(0);
+    if (handleChoice === 10) {
+      setIdCompareEng(0);
+      setIdCompareVie(0);
       if (checkIdCompareEng === checkIdCompareVie) {
         setIsCountChange(++countChange);
         setIsError({ error: false, indexEng: -1, indexVie: -1 })
+        if(listWords.length <= 6){
+          setIsEndEng(preVal => {
+            const updateData = preVal;
+            updateData[checkIndexEng].endDisable = true;
+            return updateData;
+          });
+          setIsEndVie(preVal => {
+            const updateData = preVal;
+            updateData[checkIndexVie].endDisable = true;
+            return updateData;
+          });
+          return;
+        }
         setIsDisable({ disable: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
         if (countChange == 1) {
           localStorage.setItem("cancelPromise", "false")
@@ -123,18 +157,20 @@ export default function RenderWord({
           [shuffledList[isChoice.indexEng], shuffledList[shuffledList.length - 1]] = [shuffledList[shuffledList.length - 1], shuffledList[isChoice.indexEng]];
           shuffledList.splice(shuffledList.length - 1, 1);
           setListWords(shuffledList);
-
-          [shuffledList[checkIndexEng], shuffledList[shuffledList.length - 1]] = [shuffledList[shuffledList.length - 1], shuffledList[checkIndexEng]];
-          shuffledList.splice(shuffledList.length - 1, 1);
-          shuffledWordList[isChoice.indexVie] = shuffledList[checkIndexEng];
-
+          
+          const newShuffledList = [...shuffledList];
+          [newShuffledList[checkIndexEng], newShuffledList[newShuffledList.length - 1]] = [newShuffledList[newShuffledList.length - 1], newShuffledList[checkIndexEng]];
+          newShuffledList.splice(newShuffledList.length - 1, 1);
+          shuffledWordList[isChoice.indexVie] = newShuffledList[checkIndexEng];
           setShuffledWord(shuffledWordList);
-          shuffledWordList[checkIndexVie] = shuffledList[isChoice.indexEng];
+
+          const newShuffledWordList = [...shuffledWordList];
+          newShuffledWordList[checkIndexVie] = newShuffledList[isChoice.indexEng];
           setIsChoice({ choice: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
 
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          setListWords(shuffledList);
-          setShuffledWord(shuffledWordList);
+          await new Promise(resolve => setTimeout(resolve, 800));
+          setListWords(newShuffledList);
+          setShuffledWord(newShuffledWordList);
           setIsDisable({ disable: false, indexEng: -1, indexVie: -1 })
         }
       } else {
@@ -146,7 +182,7 @@ export default function RenderWord({
   return (
     <div className="mt-5 lg:mt-2 lg:mx-40 grid grid-cols-2 gap-5">
       <div>
-        {listWords?.slice(0, 5).map((word, index) => (
+        {listWords?.slice(0, 6).map((word, index) => (
           <div key={word.id + "ENG"} className={clsx({
             'animate-shake': isError.error && isError.indexEng == index,
           })}>
@@ -159,8 +195,9 @@ export default function RenderWord({
                   'opacity-[1] animate-disable-word': isDisable.indexEng == index,
                   'opacity-[0] animate-undisable-word': isDisable.indexEng !== index,
                   'bg-transparent': !isError.error && isError.indexEng !== index,
+                  '!opacity-50': isEndEng[index].endDisable,
                 })}
-              disabled={isDisable.indexEng == index}
+              disabled={isDisable.indexEng == index || isEndEng[index].endDisable}
             >
               {word.english_word}
             </button>
@@ -181,8 +218,9 @@ export default function RenderWord({
                   'opacity-[1] animate-disable-word': isDisable.indexVie == index,
                   'opacity-[0] animate-undisable-word': isDisable.indexVie !== index,
                   'bg-transparent': !isError.error && isError.indexVie !== index,
+                  '!opacity-50': isEndVie[index].endDisable
                 })}
-              disabled={isDisable.disable && isDisable.indexVie == index}
+              disabled={isDisable.disable && isDisable.indexVie == index || isEndVie[index].endDisable}
             >
               {word.vietnamese_word}
             </button>
