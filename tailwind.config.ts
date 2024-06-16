@@ -18,7 +18,7 @@ const config: Config = {
     },
     animation: {
       'shake': 'shake 0.82s cubic-bezier(.36,.07,.19,.97) both',
-      'disable-word': 'disable-word 1s both',
+      'disable-word': 'disable-word 4s both',
       'undisable-word': 'undisable-word 4s both',
     },
     keyframes: {
