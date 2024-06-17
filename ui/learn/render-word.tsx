@@ -60,17 +60,6 @@ export default function RenderWord({
   }, []);
 
   useEffect(() => {
-    if (isCountChange === 2) {
-      setIsCountChange(0);
-      setIsChoice({ choice: false, indexEng: -1, indexVie: -1 });
-      setCancelPromise(true);
-    } else {
-      setCancelPromise(false);
-    }
-  }, [isCountChange]);
-
-
-  useEffect(() => {
     if (isError.error) {
       setTimeout(() => {
         setIsError({ error: false, indexEng: -1, indexVie: -1 })
@@ -80,16 +69,22 @@ export default function RenderWord({
 
 
   useEffect(() => {
-    console.log(isDisEng);
-    console.log('Eng------');
-    console.log(isDisVie);
-    console.log("Vie------");
-  }, [isDisEng,isDisVie]);
-
+    const unDisable = async () =>{
+      await new Promise(resolve => setTimeout(resolve, 3500));
+      hanldeDisable(isChoice.indexEng, isChoice.indexVie, false);
+    }
+    if(isChoice.choice && isDisEng[isChoice.indexEng].isDisable && isDisVie[isChoice.indexVie].isDisable){
+      unDisable();
+    }
+  }, [isChoice, isDisEng, isDisVie]);
 
   useEffect(() => {
-    if (isHandleChoice == 10 || isHandleChoice == 2 || isHandleChoice == 18) {
+    if (isHandleChoice == 10) {
       setIsHandleChoice(0);
+    } else if (isHandleChoice == 18) {
+      setIsHandleChoice(9);
+    } else if (isHandleChoice == 2) {
+      setIsHandleChoice(1);
     }
   }, [isHandleChoice]);
 
@@ -115,82 +110,59 @@ export default function RenderWord({
     return shuffledList;
   }
 
+  function hanldeDisable(indexEng:number, indexVie:number, isDisable:boolean){
+    setIsDisEng(preVal => {
+      const updateData = [...preVal];
+      updateData[indexEng] = { isDisable: isDisable }
+      return updateData;
+    });
+    setIsDisVie(preVal => {
+      const updateData = [...preVal];
+      updateData[indexVie] = { isDisable: isDisable }
+      return updateData;
+    });
+  }
+
   async function compareWord(type: number, compare_id: number, index: number, id: number) {
-    var countChange = isCountChange;
     var handleChoice = isHandleChoice;
     var checkIdCompareEng = idCompareEng;
     var checkIdCompareVie = idCompareVie;
+    var checkIndexEng = indexEng;
+    var checkIndexVie = indexVie;
 
     if (type === Eng) {
       setIdCompareEng(compare_id);
       setIndexEng(index);
       checkIdCompareEng = compare_id;
       handleChoice = handleChoice + 1;
+      checkIndexEng = index;
     } else {
       setIdCompareVie(compare_id);
       setIndexVie(index);
       checkIdCompareVie = compare_id;
       handleChoice = handleChoice + 9;
+      checkIndexVie = index;
     }
     setIsHandleChoice(handleChoice);
-    const checkIndexEng = type === Eng ? index : indexEng;
-    const checkIndexVie = type === Eng ? indexVie : index;
 
     if (handleChoice === 10) {
-      setIdCompareEng(0);
-      setIdCompareVie(0);
       if (checkIdCompareEng === checkIdCompareVie) {
-        setIsCountChange(++countChange);
-        setIsError({ error: false, indexEng: -1, indexVie: -1 })
-        if (listWords.length <= 6) {
-          setIsEndEng(preVal => {
-            const updateData = preVal;
-            updateData[checkIndexEng].endDisable = true;
-            return updateData;
-          });
-          setIsEndVie(preVal => {
-            const updateData = preVal;
-            updateData[checkIndexVie].endDisable = true;
-            return updateData;
-          });
-          return;
-        }
-        // setIsDisable({ disable: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
-        setIsDisEng(preVal =>{
-          const updateData = [...preVal];
-          updateData[checkIndexEng] = {isDisable: true}
-          return updateData;
-        });
-        setIsDisVie(preVal =>{
-          const updateData = [...preVal];
-          updateData[checkIndexVie] = {isDisable: true}
-          return updateData;
-        });
-        setIsChoice({ choice: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
         let shuffledList = [...listWords];
         let shuffledWordList = [...shuffledWord!];
         [shuffledList[checkIndexEng], shuffledList[shuffledList.length - 1]] = [shuffledList[shuffledList.length - 1], shuffledList[checkIndexEng]];
         shuffledList.splice(shuffledList.length - 1, 1);
-        shuffledWordList[checkIndexVie] = shuffledList[checkIndexEng];
         if(isChoice.choice){
-          [shuffledList[isChoice.indexEng], shuffledList[shuffledList.length - 1]] = [shuffledList[shuffledList.length - 1], shuffledList[isChoice.indexEng]];
-          shuffledList.splice(shuffledList.length - 1, 1);
-          shuffledWordList[isChoice.indexVie] = shuffledList[isChoice.indexEng];
+          hanldeDisable(isChoice.indexEng, isChoice.indexVie, false);
+          setIsChoice({ choice: false, indexEng: -1, indexVie: -1 });
+          shuffledWordList[checkIndexVie] = shuffledList[isChoice.indexEng];
+          shuffledWordList[isChoice.indexVie] = shuffledList[checkIndexEng];
+        }else{
+          shuffledWordList[checkIndexVie] = shuffledList[checkIndexEng];
         }
+        setIsChoice({ choice: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
+        hanldeDisable(checkIndexEng, checkIndexVie, true);
         setListWords(shuffledList);
         setShuffledWord(shuffledWordList);
-        setIsDisEng(preVal =>{
-          const updateData = [...preVal];
-          updateData[checkIndexEng] = {isDisable: false}
-          return updateData;
-        });
-        setIsDisVie(preVal =>{
-          const updateData = [...preVal];
-          updateData[checkIndexVie] = {isDisable: false}
-          return updateData;
-        });
       } else {
         setIsError({ error: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
       }
@@ -210,8 +182,8 @@ export default function RenderWord({
                 "text-center mt-5 text-7xl transition-all border w-full rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:scale-75 lg:mt-0 lg:text-5xl focus:bg-blue-500 focus:text-white hover:bg-blue-500 hover:text-white",
                 {
                   'bg-red-700 focus:bg-red-700': isError.error && isError.indexEng == index,
-                  'opacity-[1] animate-disable-word': isDisEng[index].isDisable,
-                  'opacity-[0] animate-undisable-word': !isDisEng[index].isDisable,
+                  'opacity-[1]': !isDisEng[index].isDisable,
+                  'opacity-[0] animate-undisable-word': isDisEng[index].isDisable,
                   'bg-transparent': !isError.error && isError.indexEng !== index,
                   '!opacity-50': isEndEng[index].endDisable,
                 })}
@@ -233,8 +205,8 @@ export default function RenderWord({
                 "text-center mt-5 text-7xl transition-all w-full border rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:scale-75 lg:mt-0 lg:text-5xl focus:bg-blue-500 focus:text-white hover:bg-blue-500 hover:text-white",
                 {
                   'bg-red-700 focus:bg-red-700': isError.error && isError.indexVie == index,
-                  'opacity-[1] animate-disable-word': isDisVie[index].isDisable,
-                  'opacity-[0] animate-undisable-word': !isDisVie[index].isDisable,
+                  'opacity-[1]': !isDisVie[index].isDisable,
+                  'opacity-[0] animate-undisable-word': isDisVie[index].isDisable,
                   'bg-transparent': !isError.error && isError.indexVie !== index,
                   '!opacity-50': isEndVie[index].endDisable
                 })}
