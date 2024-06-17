@@ -147,19 +147,26 @@ export default function RenderWord({
 
     if (handleChoice === 10) {
       if (checkIdCompareEng === checkIdCompareVie) {
+        setIsChoice({ choice: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
         let shuffledList = [...listWords];
         let shuffledWordList = [...shuffledWord!];
         [shuffledList[checkIndexEng], shuffledList[shuffledList.length - 1]] = [shuffledList[shuffledList.length - 1], shuffledList[checkIndexEng]];
         shuffledList.splice(shuffledList.length - 1, 1);
         if(isChoice.choice){
           hanldeDisable(isChoice.indexEng, isChoice.indexVie, false);
-          setIsChoice({ choice: false, indexEng: -1, indexVie: -1 });
-          shuffledWordList[checkIndexVie] = shuffledList[isChoice.indexEng];
+          // console.log(shuffledList[isChoice.indexEng]);
+          // console.log("------- "+isChoice.indexEng+" isChoice-----");
+          // console.log(shuffledList[checkIndexEng]);
+          // console.log("------- "+checkIndexEng+" checkIndexEng-----");
+          if(shuffledWordList.filter(word => word.id == shuffledList[isChoice.indexEng].id)){
+            shuffledWordList[checkIndexVie] = shuffledWordList[isChoice.indexEng];
+          }else{
+            shuffledWordList[checkIndexVie] = shuffledList[isChoice.indexEng];
+          }
           shuffledWordList[isChoice.indexVie] = shuffledList[checkIndexEng];
         }else{
           shuffledWordList[checkIndexVie] = shuffledList[checkIndexEng];
         }
-        setIsChoice({ choice: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
         hanldeDisable(checkIndexEng, checkIndexVie, true);
         setListWords(shuffledList);
         setShuffledWord(shuffledWordList);
