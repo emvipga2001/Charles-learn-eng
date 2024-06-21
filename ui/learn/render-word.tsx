@@ -67,16 +67,20 @@ export default function RenderWord({
     }
   }, [isError]);
 
+  // useEffect(() => {
+  //   console.log(isDisEng);
+  //   console.log(isDisVie);
+  // }, [isDisEng, isDisVie]);
 
-  useEffect(() => {
-    const unDisable = async () =>{
-      await new Promise(resolve => setTimeout(resolve, 3500));
-      hanldeDisable(isChoice.indexEng, isChoice.indexVie, false);
-    }
-    if(isChoice.choice && isDisEng[isChoice.indexEng].isDisable && isDisVie[isChoice.indexVie].isDisable){
-      unDisable();
-    }
-  }, [isChoice, isDisEng, isDisVie]);
+  // useEffect(() => {
+  //   const unDisable = async () =>{
+  //     await new Promise(resolve => setTimeout(resolve, 3500));
+  //     hanldeDisable(isChoice.indexEng, isChoice.indexVie, false);
+  //   }
+  //   if(isChoice.choice && isDisEng[isChoice.indexEng].isDisable && isDisVie[isChoice.indexVie].isDisable){
+  //     unDisable();
+  //   }
+  // }, [isChoice, isDisEng, isDisVie]);
 
   useEffect(() => {
     if (isHandleChoice == 10) {
@@ -90,23 +94,23 @@ export default function RenderWord({
 
   function handleShuffledList(listWord: FormattedListWord[]) {
     const shuffledList = [...listWord];
-    // for (let i = shuffledList.length - 1; i > 0; i--) {
-    //   const j = Math.floor(Math.random() * (i + 1));
-    //   [shuffledList[i], shuffledList[j]] = [shuffledList[j], shuffledList[i]];
-    // }
+    for (let i = shuffledList.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledList[i], shuffledList[j]] = [shuffledList[j], shuffledList[i]];
+    }
     return shuffledList;
   }
 
   function duplicateList(listWord: FormattedListWord[]) {
     const shuffledList = [...listWord];
-    // for (let i = 0; i < 10; i++) {
-    //   const j = Math.floor(Math.random() * shuffledList.length);
-    //   const newElement: FormattedListWord ={
-    //     ...shuffledList[j],
-    //     id: shuffledList[shuffledList.length - 1].id + 1,
-    //   }
-    //   shuffledList.push(newElement);
-    // }
+    for (let i = 0; i < 10; i++) {
+      const j = Math.floor(Math.random() * shuffledList.length);
+      const newElement: FormattedListWord ={
+        ...shuffledList[j],
+        id: shuffledList[shuffledList.length - 1].id + 1,
+      }
+      shuffledList.push(newElement);
+    }
     return shuffledList;
   }
 
@@ -147,27 +151,33 @@ export default function RenderWord({
 
     if (handleChoice === 10) {
       if (checkIdCompareEng === checkIdCompareVie) {
+        // Lưu giá trị đã chọn đúng vào đây để tiến hành tráo nghĩa ở lần chọn tiếp theo
         setIsChoice({ choice: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
+        // Disabled từ mới chọn để chuẩn bị ra từ khác
+        // hanldeDisable(isChoice.indexEng, isChoice.indexVie, false);
+
         let shuffledList = [...listWords];
         let shuffledWordList = [...shuffledWord!];
+
+        // Đổi vị trí của từ vừa chọn đúng xuống dưới cuối mảng và xóa từ ở cuối đi
         [shuffledList[checkIndexEng], shuffledList[shuffledList.length - 1]] = [shuffledList[shuffledList.length - 1], shuffledList[checkIndexEng]];
-        shuffledList.splice(shuffledList.length - 1, 1);
-        if(isChoice.choice){
-          hanldeDisable(isChoice.indexEng, isChoice.indexVie, false);
-          // console.log(shuffledList[isChoice.indexEng]);
-          // console.log("------- "+isChoice.indexEng+" isChoice-----");
-          // console.log(shuffledList[checkIndexEng]);
-          // console.log("------- "+checkIndexEng+" checkIndexEng-----");
-          if(shuffledWordList.filter(word => word.id == shuffledList[isChoice.indexEng].id)){
-            shuffledWordList[checkIndexVie] = shuffledWordList[isChoice.indexEng];
-          }else{
-            shuffledWordList[checkIndexVie] = shuffledList[isChoice.indexEng];
-          }
-          shuffledWordList[isChoice.indexVie] = shuffledList[checkIndexEng];
-        }else{
-          shuffledWordList[checkIndexVie] = shuffledList[checkIndexEng];
-        }
-        hanldeDisable(checkIndexEng, checkIndexVie, true);
+        shuffledList.pop();
+        // Tráo vị trí của nghĩa (nhưng hiện tại việc tráo này đang có vấn đề)
+        shuffledWordList[checkIndexVie] = shuffledList[checkIndexEng];
+        // if(isChoice.choice){
+        //   if(Math.floor(Math.random() * 2) == 0){
+        //     shuffledWordList[checkIndexVie] = shuffledWordList[isChoice.indexEng];
+        //     shuffledWordList[isChoice.indexVie] = shuffledList[checkIndexEng];
+        //   }else{
+        //     shuffledWordList[checkIndexVie] = shuffledWordList[checkIndexEng];
+        //     shuffledWordList[isChoice.indexVie] = shuffledList[isChoice.indexEng];
+        //   }
+        //   setIsChoice({ choice: false, indexEng: -1, indexVie: -1 });
+        // }else{
+        //   shuffledWordList[checkIndexVie] = shuffledList[checkIndexEng];
+        // }
+
+        // hanldeDisable(checkIndexEng, checkIndexVie, true);
         setListWords(shuffledList);
         setShuffledWord(shuffledWordList);
       } else {
