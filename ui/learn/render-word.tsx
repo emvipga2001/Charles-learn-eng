@@ -95,23 +95,23 @@ export default function RenderWord({
 
   function handleShuffledList(listWord: FormattedListWord[]) {
     const shuffledList = [...listWord];
-    // for (let i = shuffledList.length - 1; i > 0; i--) {
-    //   const j = Math.floor(Math.random() * (i + 1));
-    //   [shuffledList[i], shuffledList[j]] = [shuffledList[j], shuffledList[i]];
-    // }
+    for (let i = shuffledList.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledList[i], shuffledList[j]] = [shuffledList[j], shuffledList[i]];
+    }
     return shuffledList;
   }
 
   function duplicateList(listWord: FormattedListWord[]) {
     const shuffledList = [...listWord];
-    // for (let i = 0; i < 10; i++) {
-    //   const j = Math.floor(Math.random() * shuffledList.length);
-    //   const newElement: FormattedListWord ={
-    //     ...shuffledList[j],
-    //     id: shuffledList[shuffledList.length - 1].id + 1,
-    //   }
-    //   shuffledList.push(newElement);
-    // }
+    for (let i = 0; i < 10; i++) {
+      const j = Math.floor(Math.random() * shuffledList.length);
+      const newElement: FormattedListWord ={
+        ...shuffledList[j],
+        id: shuffledList[shuffledList.length - 1].id + 1,
+      }
+      shuffledList.push(newElement);
+    }
     return shuffledList;
   }
 
