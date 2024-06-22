@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FormattedListWord } from "../../lib/definitions";
 import clsx from "clsx";
+import { count } from "console";
 
 export default function RenderWord({
   params,
@@ -18,7 +19,8 @@ export default function RenderWord({
   const [indexVie, setIndexVie] = useState(0);
   const [idCompareEng, setIdCompareEng] = useState(0);
   const [idCompareVie, setIdCompareVie] = useState(0);
-  const [cancelPromise, setCancelPromise] = useState(false);
+  const [countCorrect, setCountCorrect] = useState(0);
+  const [isShuffled, setIsShuffled] = useState(true);
   const [isEndEng, setIsEndEng] = useState([
     { endDisable: false },
     { endDisable: false },
@@ -67,16 +69,19 @@ export default function RenderWord({
     }
   }, [isError]);
 
-
   useEffect(() => {
-    const unDisable = async () =>{
-      await new Promise(resolve => setTimeout(resolve, 3500));
-      hanldeDisable(isChoice.indexEng, isChoice.indexVie, false);
+    if (countCorrect == 2) {
+      setCountCorrect(0);
+    }else if(countCorrect == 1){
+      setTimeout(()=>{
+        setCountCorrect(0);
+        if(!isShuffled){
+          setIsChoice({ choice: false, indexEng: -1, indexVie: -1 });
+          console.log("--------------------2-------------------");
+        }
+      },4000)
     }
-    if(isChoice.choice && isDisEng[isChoice.indexEng].isDisable && isDisVie[isChoice.indexVie].isDisable){
-      unDisable();
-    }
-  }, [isChoice, isDisEng, isDisVie]);
+  }, [countCorrect]);
 
   useEffect(() => {
     if (isHandleChoice == 10) {
@@ -123,12 +128,30 @@ export default function RenderWord({
     });
   }
 
+  /**
+   * 2 TH:
+   * 1. Đảo nghĩa của lần chọn thứ 1 và 2
+   * 2. Không đảo lần thứ 1 chỉ đảo lần 2 và 3
+   * 
+   * 2 CSS:
+   * 1. Khi chọn đúng ẩn dần từ và nghĩa từ chọn đúng
+   * 2. Khi hiển thị từ mới hiện dần từ và nghĩa của từ tiếp theo
+   *  
+   * Flow
+   * - Khi chọn lần thứ nhất đúng trong khoảng thời gian 4s nếu họ không chọn từ 
+   *   tiếp theo thì sẽ không đảo vị trí
+   * - Khi chọn lần thứ nhất và lần thứ hai đúng thì xảy ra 2 trường hợp ngẫu nhiên:
+   * + Đảo vị trí của lần 1 và 2
+   * + Không đảo vị trí của lần 1 sẽ tiến hành đảo vị trí của lần 2 và 3
+   * 
+   */
   async function compareWord(type: number, compare_id: number, index: number, id: number) {
     var handleChoice = isHandleChoice;
     var checkIdCompareEng = idCompareEng;
     var checkIdCompareVie = idCompareVie;
     var checkIndexEng = indexEng;
     var checkIndexVie = indexVie;
+    var countChoice = countCorrect;
 
     if (type === Eng) {
       setIdCompareEng(compare_id);
@@ -147,25 +170,33 @@ export default function RenderWord({
 
     if (handleChoice === 10) {
       if (checkIdCompareEng === checkIdCompareVie) {
+        const shuffledList = [...listWords];
+        const shuffledWordList = [...shuffledWord!];
         setIsChoice({ choice: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
-        let shuffledList = [...listWords];
-        let shuffledWordList = [...shuffledWord!];
+        setCountCorrect(++countChoice);
+        hanldeDisable(isChoice.indexEng, isChoice.indexVie, false);
         [shuffledList[checkIndexEng], shuffledList[shuffledList.length - 1]] = [shuffledList[shuffledList.length - 1], shuffledList[checkIndexEng]];
-        shuffledList.splice(shuffledList.length - 1, 1);
-        if(isChoice.choice){
-          hanldeDisable(isChoice.indexEng, isChoice.indexVie, false);
-          // console.log(shuffledList[isChoice.indexEng]);
-          // console.log("------- "+isChoice.indexEng+" isChoice-----");
-          // console.log(shuffledList[checkIndexEng]);
-          // console.log("------- "+checkIndexEng+" checkIndexEng-----");
-          if(shuffledWordList.filter(word => word.id == shuffledList[isChoice.indexEng].id)){
-            shuffledWordList[checkIndexVie] = shuffledWordList[isChoice.indexEng];
+        shuffledList.pop();
+        if(countChoice == 1){
+          if(isShuffled){
+            shuffledWordList[checkIndexVie] = shuffledList[checkIndexEng];
           }else{
             shuffledWordList[checkIndexVie] = shuffledList[isChoice.indexEng];
+            setIsChoice({ choice: false, indexEng: -1, indexVie: -1 });
+            console.log("--------------------1-------------------");
+            setCountCorrect(0);
+            setIsShuffled(true);
           }
-          shuffledWordList[isChoice.indexVie] = shuffledList[checkIndexEng];
         }else{
-          shuffledWordList[checkIndexVie] = shuffledList[checkIndexEng];
+          const random = Math.floor(Math.random() * 2) == 0;
+          setIsShuffled(random);
+          if(random){
+            shuffledWordList[checkIndexVie] = shuffledList[isChoice.indexEng];
+            shuffledWordList[isChoice.indexVie] = shuffledList[checkIndexEng];
+          }else{
+            shuffledWordList[isChoice.indexVie] = shuffledList[isChoice.indexEng];
+            shuffledWordList[checkIndexVie] = shuffledList[shuffledList.length - 1];
+          }
         }
         hanldeDisable(checkIndexEng, checkIndexVie, true);
         setListWords(shuffledList);
@@ -190,7 +221,7 @@ export default function RenderWord({
                 {
                   'bg-red-700 focus:bg-red-700': isError.error && isError.indexEng == index,
                   'opacity-[1]': !isDisEng[index].isDisable,
-                  'opacity-[0] animate-undisable-word': isDisEng[index].isDisable,
+                  'opacity-[0] animate-undisable-word pointer-events-none': isDisEng[index].isDisable,
                   'bg-transparent': !isError.error && isError.indexEng !== index,
                   '!opacity-50': isEndEng[index].endDisable,
                 })}
