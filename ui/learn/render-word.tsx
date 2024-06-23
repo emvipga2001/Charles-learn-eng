@@ -77,7 +77,6 @@ export default function RenderWord({
         setCountCorrect(0);
         if(!isShuffled){
           setIsChoice({ choice: false, indexEng: -1, indexVie: -1 });
-          console.log("--------------------2-------------------");
         }
       },4000)
     }
@@ -95,10 +94,10 @@ export default function RenderWord({
 
   function handleShuffledList(listWord: FormattedListWord[]) {
     const shuffledList = [...listWord];
-    for (let i = shuffledList.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledList[i], shuffledList[j]] = [shuffledList[j], shuffledList[i]];
-    }
+    // for (let i = shuffledList.length - 1; i > 0; i--) {
+    //   const j = Math.floor(Math.random() * (i + 1));
+    //   [shuffledList[i], shuffledList[j]] = [shuffledList[j], shuffledList[i]];
+    // }
     return shuffledList;
   }
 
@@ -170,6 +169,20 @@ export default function RenderWord({
 
     if (handleChoice === 10) {
       if (checkIdCompareEng === checkIdCompareVie) {
+        setIsError({ error: false, indexEng: -1, indexVie: -1 })
+        if(listWords.length <= 6){
+          setIsEndEng(preVal => {
+            const updateData = preVal;
+            updateData[checkIndexEng].endDisable = true;
+            return updateData;
+          });
+          setIsEndVie(preVal => {
+            const updateData = preVal;
+            updateData[checkIndexVie].endDisable = true;
+            return updateData;
+          });
+          return;
+        }
         const shuffledList = [...listWords];
         const shuffledWordList = [...shuffledWord!];
         setIsChoice({ choice: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
@@ -182,8 +195,6 @@ export default function RenderWord({
             shuffledWordList[checkIndexVie] = shuffledList[checkIndexEng];
           }else{
             shuffledWordList[checkIndexVie] = shuffledList[isChoice.indexEng];
-            setIsChoice({ choice: false, indexEng: -1, indexVie: -1 });
-            console.log("--------------------1-------------------");
             setCountCorrect(0);
             setIsShuffled(true);
           }
@@ -215,17 +226,17 @@ export default function RenderWord({
             'animate-shake': isError.error && isError.indexEng == index,
           })}>
             <button
+              key={word.id + "ENG"}
               onClick={() => compareWord(Eng, word.compare_id, index, word.id)}
               className={clsx(
-                "text-center mt-5 text-7xl transition-all border w-full rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:scale-75 lg:mt-0 lg:text-5xl focus:bg-blue-500 focus:text-white hover:bg-blue-500 hover:text-white",
+                "opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 text-7xl transition-all border w-full rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:scale-75 lg:mt-0 lg:text-5xl focus:bg-blue-500 focus:text-white hover:bg-blue-500 hover:text-white",
                 {
+                  '!opacity-[1] !pointer-events-auto': !isDisEng[index].isDisable && !isEndEng[index].endDisable,
                   'bg-red-700 focus:bg-red-700': isError.error && isError.indexEng == index,
-                  'opacity-[1]': !isDisEng[index].isDisable,
-                  'opacity-[0] animate-undisable-word pointer-events-none': isDisEng[index].isDisable,
                   'bg-transparent': !isError.error && isError.indexEng !== index,
-                  '!opacity-50': isEndEng[index].endDisable,
+                  '!opacity-50 !pointer-events-none': isEndEng[index].endDisable,
                 })}
-              disabled={isDisEng[index].isDisable || isEndEng[index].endDisable}
+                disabled={isEndEng[index].endDisable}
             >
               {word.english_word}
             </button>
@@ -238,17 +249,17 @@ export default function RenderWord({
             'animate-shake': isError.error && isError.indexVie == index,
           })}>
             <button
+              key={word.id + "ENG"}
               onClick={() => compareWord(Vie, word.compare_id, index, word.id)}
               className={clsx(
-                "text-center mt-5 text-7xl transition-all w-full border rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:scale-75 lg:mt-0 lg:text-5xl focus:bg-blue-500 focus:text-white hover:bg-blue-500 hover:text-white",
+                "opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 text-7xl transition-all w-full border rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:scale-75 lg:mt-0 lg:text-5xl focus:bg-blue-500 focus:text-white hover:bg-blue-500 hover:text-white",
                 {
+                  '!opacity-[1] !pointer-events-auto': !isDisVie[index].isDisable  && !isEndVie[index].endDisable,
                   'bg-red-700 focus:bg-red-700': isError.error && isError.indexVie == index,
-                  'opacity-[1]': !isDisVie[index].isDisable,
-                  'opacity-[0] animate-undisable-word': isDisVie[index].isDisable,
                   'bg-transparent': !isError.error && isError.indexVie !== index,
-                  '!opacity-50': isEndVie[index].endDisable
+                  '!opacity-50 !pointer-events-none': isEndVie[index].endDisable
                 })}
-              disabled={isDisVie[index].isDisable || isEndVie[index].endDisable}
+              disabled={isEndVie[index].endDisable}
             >
               {word.vietnamese_word}
             </button>
