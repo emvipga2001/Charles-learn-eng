@@ -94,10 +94,10 @@ export default function RenderWord({
 
   function handleShuffledList(listWord: FormattedListWord[]) {
     const shuffledList = [...listWord];
-    // for (let i = shuffledList.length - 1; i > 0; i--) {
-    //   const j = Math.floor(Math.random() * (i + 1));
-    //   [shuffledList[i], shuffledList[j]] = [shuffledList[j], shuffledList[i]];
-    // }
+    for (let i = shuffledList.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledList[i], shuffledList[j]] = [shuffledList[j], shuffledList[i]];
+    }
     return shuffledList;
   }
 
