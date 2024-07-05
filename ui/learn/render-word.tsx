@@ -9,7 +9,7 @@ export default function RenderWord({
   params: FormattedListWord[];
 }) {
   const [listWords, setListWords] = useState<FormattedListWord[]>(params);
-  const [shuffledWord, setShuffledWord] = useState<FormattedListWord[]>();
+  const [shuffledWord, setShuffledWord] = useState<FormattedListWord[]>([]);
   const [isCountChange, setIsCountChange] = useState<number>(0);
   const [isError, setIsError] = useState({ error: false, indexEng: -1, indexVie: -1 });
   const [isDisable, setIsDisable] = useState({ disable: false, indexEng: -1, indexVie: -1 });
@@ -72,13 +72,13 @@ export default function RenderWord({
   useEffect(() => {
     if (countCorrect == 2) {
       setCountCorrect(0);
-    }else if(countCorrect == 1){
-      setTimeout(()=>{
+    } else if (countCorrect == 1) {
+      setTimeout(() => {
         setCountCorrect(0);
-        if(!isShuffled){
+        if (!isShuffled) {
           setIsChoice({ choice: false, indexEng: -1, indexVie: -1 });
         }
-      },4000)
+      }, 4000)
     }
   }, [countCorrect]);
 
@@ -103,18 +103,18 @@ export default function RenderWord({
 
   function duplicateList(listWord: FormattedListWord[]) {
     const shuffledList = [...listWord];
-    for (let i = 0; i < 10; i++) {
-      const j = Math.floor(Math.random() * shuffledList.length);
-      const newElement: FormattedListWord ={
-        ...shuffledList[j],
-        id: shuffledList[shuffledList.length - 1].id + 1,
-      }
-      shuffledList.push(newElement);
-    }
+    // for (let i = 0; i < 10; i++) {
+    //   const j = Math.floor(Math.random() * shuffledList.length);
+    //   const newElement: FormattedListWord ={
+    //     ...shuffledList[j],
+    //     id: shuffledList[shuffledList.length - 1].id + 1,
+    //   }
+    //   shuffledList.push(newElement);
+    // }
     return shuffledList;
   }
 
-  function hanldeDisable(indexEng:number, indexVie:number, isDisable:boolean){
+  function hanldeDisable(indexEng: number, indexVie: number, isDisable: boolean) {
     setIsDisEng(preVal => {
       const updateData = [...preVal];
       updateData[indexEng] = { isDisable: isDisable }
@@ -170,7 +170,12 @@ export default function RenderWord({
     if (handleChoice === 10) {
       if (checkIdCompareEng === checkIdCompareVie) {
         setIsError({ error: false, indexEng: -1, indexVie: -1 })
-        if(listWords.length <= 6){
+        const shuffledList = [...listWords];
+        const shuffledWordList = [...shuffledWord];
+        setIsChoice({ choice: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
+        setCountCorrect(++countChoice);
+        hanldeDisable(isChoice.indexEng, isChoice.indexVie, false);
+        if (shuffledList.length <= 5) {
           setIsEndEng(preVal => {
             const updateData = preVal;
             updateData[checkIndexEng].endDisable = true;
@@ -183,28 +188,23 @@ export default function RenderWord({
           });
           return;
         }
-        const shuffledList = [...listWords];
-        const shuffledWordList = [...shuffledWord!];
-        setIsChoice({ choice: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
-        setCountCorrect(++countChoice);
-        hanldeDisable(isChoice.indexEng, isChoice.indexVie, false);
         [shuffledList[checkIndexEng], shuffledList[shuffledList.length - 1]] = [shuffledList[shuffledList.length - 1], shuffledList[checkIndexEng]];
         shuffledList.pop();
-        if(countChoice == 1){
-          if(isShuffled){
+        if (countChoice == 1) {
+          if (isShuffled) {
             shuffledWordList[checkIndexVie] = shuffledList[checkIndexEng];
-          }else{
+          } else {
             shuffledWordList[checkIndexVie] = shuffledList[isChoice.indexEng];
             setCountCorrect(0);
             setIsShuffled(true);
           }
-        }else{
+        } else {
           const random = Math.floor(Math.random() * 2) == 0;
           setIsShuffled(random);
-          if(random){
+          if (random) {
             shuffledWordList[checkIndexVie] = shuffledList[isChoice.indexEng];
             shuffledWordList[isChoice.indexVie] = shuffledList[checkIndexEng];
-          }else{
+          } else {
             shuffledWordList[isChoice.indexVie] = shuffledList[isChoice.indexEng];
             shuffledWordList[checkIndexVie] = shuffledList[shuffledList.length - 1];
           }
@@ -219,52 +219,57 @@ export default function RenderWord({
   }
 
   return (
-    <div className="mt-5 lg:mt-2 lg:mx-40 grid grid-cols-2 gap-5">
-      <div>
-        {listWords?.slice(0, 5).map((word, index) => (
-          <div key={index + "ENG"} className={clsx({
-            'animate-shake': isError.error && isError.indexEng == index,
-          })}>
-            <button
-              key={word.id + "ENG"}
-              onClick={() => compareWord(Eng, word.compare_id, index, word.id)}
-              className={clsx(
-                "opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 text-7xl transition-all border w-full rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:scale-75 lg:mt-0 lg:text-5xl focus:bg-blue-500 focus:text-white hover:bg-blue-500 hover:text-white",
-                {
-                  '!opacity-[1] !pointer-events-auto': !isDisEng[index].isDisable && !isEndEng[index].endDisable,
-                  'bg-red-700 focus:bg-red-700': isError.error && isError.indexEng == index,
-                  'bg-transparent': !isError.error && isError.indexEng !== index,
-                  '!opacity-50 !pointer-events-none': isEndEng[index].endDisable,
-                })}
-                disabled={isEndEng[index].endDisable}
-            >
-              {word.english_word}
-            </button>
-          </div>
-        ))}
+    <div>
+      <div className="mt-5 lg:mt-2 w-full h-8 border rounded-2xl">
+
       </div>
-      <div>
-        {shuffledWord?.slice(0, 5).map((word, index) => (
-          <div key={index + "VIE"} className={clsx({
-            'animate-shake': isError.error && isError.indexVie == index,
-          })}>
-            <button
-              key={word.id + "ENG"}
-              onClick={() => compareWord(Vie, word.compare_id, index, word.id)}
-              className={clsx(
-                "opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 text-7xl transition-all w-full border rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:scale-75 lg:mt-0 lg:text-5xl focus:bg-blue-500 focus:text-white hover:bg-blue-500 hover:text-white",
-                {
-                  '!opacity-[1] !pointer-events-auto': !isDisVie[index].isDisable  && !isEndVie[index].endDisable,
-                  'bg-red-700 focus:bg-red-700': isError.error && isError.indexVie == index,
-                  'bg-transparent': !isError.error && isError.indexVie !== index,
-                  '!opacity-50 !pointer-events-none': isEndVie[index].endDisable
-                })}
-              disabled={isEndVie[index].endDisable}
-            >
-              {word.vietnamese_word}
-            </button>
-          </div>
-        ))}
+      <div className="lg:mx-40 grid grid-cols-2 gap-5">
+        <div>
+          {listWords?.slice(0, 5).map((word, index) => (
+            <div key={index + "ENG"} className={clsx({
+              'animate-shake': isError.error && isError.indexEng == index,
+            })}>
+              <button
+                key={word.id + "ENG"}
+                onClick={() => compareWord(Eng, word.compare_id, index, word.id)}
+                className={clsx(
+                  "opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 text-7xl transition-all border w-full rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:scale-75 lg:mt-0 lg:text-5xl focus:bg-blue-500 focus:text-white hover:bg-blue-500 hover:text-white",
+                  {
+                    '!opacity-[1] !pointer-events-auto': !isDisEng[index].isDisable && !isEndEng[index].endDisable,
+                    'bg-red-700 focus:bg-red-700': isError.error && isError.indexEng == index,
+                    'bg-transparent': !isError.error && isError.indexEng !== index,
+                    '!opacity-50 !pointer-events-none': isEndEng[index].endDisable,
+                  })}
+                disabled={isEndEng[index].endDisable}
+              >
+                {word.english_word}
+              </button>
+            </div>
+          ))}
+        </div>
+        <div>
+          {shuffledWord?.slice(0, 5).map((word, index) => (
+            <div key={index + "VIE"} className={clsx({
+              'animate-shake': isError.error && isError.indexVie == index,
+            })}>
+              <button
+                key={word.id + "ENG"}
+                onClick={() => compareWord(Vie, word.compare_id, index, word.id)}
+                className={clsx(
+                  "opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 text-7xl transition-all w-full border rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:scale-75 lg:mt-0 lg:text-5xl focus:bg-blue-500 focus:text-white hover:bg-blue-500 hover:text-white",
+                  {
+                    '!opacity-[1] !pointer-events-auto': !isDisVie[index].isDisable && !isEndVie[index].endDisable,
+                    'bg-red-700 focus:bg-red-700': isError.error && isError.indexVie == index,
+                    'bg-transparent': !isError.error && isError.indexVie !== index,
+                    '!opacity-50 !pointer-events-none': isEndVie[index].endDisable
+                  })}
+                disabled={isEndVie[index].endDisable}
+              >
+                {word.vietnamese_word}
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
