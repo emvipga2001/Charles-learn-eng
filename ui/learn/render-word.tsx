@@ -52,6 +52,9 @@ export default function RenderWord({
     { isDisable: false }
   ]);
 
+  const [maxlengthWord, setMaxlengthWord] = useState(0);
+  const [taskBarColor, setTaskBarColor] = useState(0);
+
   const Eng = 1;
   const Vie = 2;
 
@@ -59,6 +62,7 @@ export default function RenderWord({
     const finishList = handleShuffledList(duplicateList(listWords));
     setListWords(finishList);
     setShuffledWord(handleShuffledList(finishList.slice(0, 5)));
+    setMaxlengthWord(finishList.length)
   }, []);
 
   useEffect(() => {
@@ -175,6 +179,7 @@ export default function RenderWord({
         setIsChoice({ choice: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
         setCountCorrect(++countChoice);
         hanldeDisable(isChoice.indexEng, isChoice.indexVie, false);
+        setTaskBarColor(prev => prev += 100 / maxlengthWord)
         if (shuffledList.length <= 5) {
           setIsEndEng(preVal => {
             const updateData = preVal;
@@ -220,8 +225,9 @@ export default function RenderWord({
 
   return (
     <div>
-      <div className="mt-5 lg:mt-2 w-full h-8 border rounded-2xl">
-
+      <div className="relative lg:mx-40 mt-5 mb-5 lg:mt-2 h-8">
+        <div className={` mt-5 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500 absolute transition-all`} style={{ width : `${taskBarColor + '%'}`}}></div>
+        <div className=" mt-5 h-8 border w-full rounded-full absolute"></div>
       </div>
       <div className="lg:mx-40 grid grid-cols-2 gap-5">
         <div>
@@ -233,7 +239,7 @@ export default function RenderWord({
                 key={word.id + "ENG"}
                 onClick={() => compareWord(Eng, word.compare_id, index, word.id)}
                 className={clsx(
-                  "opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 text-7xl transition-all border w-full rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:scale-75 lg:mt-0 lg:text-5xl focus:bg-blue-500 focus:text-white hover:bg-blue-500 hover:text-white",
+                  "opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 text-7xl transition-all border w-full rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 lg:text-5xl focus:bg-blue-500 focus:text-white hover:bg-blue-500 hover:text-white",
                   {
                     '!opacity-[1] !pointer-events-auto': !isDisEng[index].isDisable && !isEndEng[index].endDisable,
                     'bg-red-700 focus:bg-red-700': isError.error && isError.indexEng == index,
@@ -256,7 +262,7 @@ export default function RenderWord({
                 key={word.id + "ENG"}
                 onClick={() => compareWord(Vie, word.compare_id, index, word.id)}
                 className={clsx(
-                  "opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 text-7xl transition-all w-full border rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:scale-75 lg:mt-0 lg:text-5xl focus:bg-blue-500 focus:text-white hover:bg-blue-500 hover:text-white",
+                  "opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 text-7xl transition-all w-full border rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 lg:text-5xl focus:bg-blue-500 focus:text-white hover:bg-blue-500 hover:text-white",
                   {
                     '!opacity-[1] !pointer-events-auto': !isDisVie[index].isDisable && !isEndVie[index].endDisable,
                     'bg-red-700 focus:bg-red-700': isError.error && isError.indexVie == index,
