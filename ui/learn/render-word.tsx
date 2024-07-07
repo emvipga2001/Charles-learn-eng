@@ -10,9 +10,7 @@ export default function RenderWord({
 }) {
   const [listWords, setListWords] = useState<FormattedListWord[]>(params);
   const [shuffledWord, setShuffledWord] = useState<FormattedListWord[]>([]);
-  const [isCountChange, setIsCountChange] = useState<number>(0);
   const [isError, setIsError] = useState({ error: false, indexEng: -1, indexVie: -1 });
-  const [isDisable, setIsDisable] = useState({ disable: false, indexEng: -1, indexVie: -1 });
   const [isChoice, setIsChoice] = useState({ choice: false, indexEng: -1, indexVie: -1 });
   const [isHandleChoice, setIsHandleChoice] = useState(0);
   const [indexEng, setIndexEng] = useState(0);
@@ -211,7 +209,7 @@ export default function RenderWord({
             shuffledWordList[isChoice.indexVie] = shuffledList[checkIndexEng];
           } else {
             shuffledWordList[isChoice.indexVie] = shuffledList[isChoice.indexEng];
-            shuffledWordList[checkIndexVie] = shuffledList[shuffledList.length - 1];
+            shuffledWordList[checkIndexVie] = shuffledList[shuffledList.length == 5 ? checkIndexEng : shuffledList.length - 1];
           }
         }
         hanldeDisable(checkIndexEng, checkIndexVie, true);
@@ -224,12 +222,12 @@ export default function RenderWord({
   }
 
   return (
-    <div>
-      <div className="relative lg:mx-40 mt-5 mb-5 lg:mt-2 h-8">
-        <div className={` mt-5 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500 absolute transition-all`} style={{ width : `${taskBarColor + '%'}`}}></div>
+    <div className="!font-mono">
+      <div className="relative lg:mx-10 mt-5 mb-5 lg:mt-2 h-8">
+        <div className="mt-5 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500 absolute transition-all" style={{ width : `${taskBarColor + '%'}`}}></div>
         <div className=" mt-5 h-8 border w-full rounded-full absolute"></div>
       </div>
-      <div className="lg:mx-40 grid grid-cols-2 gap-5">
+      <div className="lg:mx-10 grid grid-cols-2 gap-5">
         <div>
           {listWords?.slice(0, 5).map((word, index) => (
             <div key={index + "ENG"} className={clsx({
