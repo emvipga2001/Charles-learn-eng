@@ -49,7 +49,6 @@ export default function RenderWord({
     { isDisable: false },
     { isDisable: false }
   ]);
-
   const [maxlengthWord, setMaxlengthWord] = useState(0);
   const [taskBarColor, setTaskBarColor] = useState(0);
 
@@ -60,7 +59,7 @@ export default function RenderWord({
     const finishList = handleShuffledList(duplicateList(listWords));
     setListWords(finishList);
     setShuffledWord(handleShuffledList(finishList.slice(0, 5)));
-    setMaxlengthWord(finishList.length)
+    setMaxlengthWord(100 / finishList.length)
   }, []);
 
   useEffect(() => {
@@ -80,7 +79,7 @@ export default function RenderWord({
         if (!isShuffled) {
           setIsChoice({ choice: false, indexEng: -1, indexVie: -1 });
         }
-      }, 4000)
+      }, 3500)
     }
   }, [countCorrect]);
 
@@ -105,14 +104,14 @@ export default function RenderWord({
 
   function duplicateList(listWord: FormattedListWord[]) {
     const shuffledList = [...listWord];
-    // for (let i = 0; i < 10; i++) {
-    //   const j = Math.floor(Math.random() * shuffledList.length);
-    //   const newElement: FormattedListWord ={
-    //     ...shuffledList[j],
-    //     id: shuffledList[shuffledList.length - 1].id + 1,
-    //   }
-    //   shuffledList.push(newElement);
-    // }
+    for (let i = 0; i < (shuffledList.length % 2); i++) {
+      const j = Math.floor(Math.random() * shuffledList.length);
+      const newElement: FormattedListWord ={
+        ...shuffledList[j],
+        id: shuffledList[shuffledList.length - 1].id + 1,
+      }
+      shuffledList.push(newElement);
+    }
     return shuffledList;
   }
 
@@ -177,7 +176,7 @@ export default function RenderWord({
         setIsChoice({ choice: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
         setCountCorrect(++countChoice);
         hanldeDisable(isChoice.indexEng, isChoice.indexVie, false);
-        setTaskBarColor(prev => prev += 100 / maxlengthWord)
+        setTaskBarColor(prev => prev += maxlengthWord)
         if (shuffledList.length <= 5) {
           setIsEndEng(preVal => {
             const updateData = preVal;
@@ -220,12 +219,16 @@ export default function RenderWord({
       }
     }
   }
+  
+  if(taskBarColor >= 99.9){
+    return (<h1>DONE</h1>)
+  }
 
   return (
     <div className="!font-mono">
       <div className="relative lg:mx-10 mt-5 mb-5 lg:mt-2 h-8">
         <div className="mt-5 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500 absolute transition-all" style={{ width : `${taskBarColor + '%'}`}}></div>
-        <div className=" mt-5 h-8 border w-full rounded-full absolute"></div>
+        <div className=" mt-5 h-8 border border-black w-full rounded-full absolute dark:border-white"></div>
       </div>
       <div className="lg:mx-10 grid grid-cols-2 gap-5">
         <div>
