@@ -1,8 +1,7 @@
 'use server'
 
 import { z } from "zod";
-import fs from 'fs';
-import path from 'path';
+import { getDb } from "./mongodb";
 
 const FormSchema = z.object({
   id: z.number(),
@@ -12,10 +11,9 @@ const FormSchema = z.object({
 });
 
 export async function getListWord() {
-  const filePath = path.join(process.cwd(), 'list-word.json');
-  const jsonData = fs.readFileSync(filePath, 'utf8');
-  const data = JSON.parse(jsonData);
-  const validatedData = z.array(FormSchema).parse(data);
-
+  const db = await getDb();
+  const getDataCollection = await db.collection('Word').find({}).toArray();
+  const validatedData = z.array(FormSchema).parse(getDataCollection);
+  await new Promise(resolve => setTimeout(resolve, 4000));
   return validatedData;
 }

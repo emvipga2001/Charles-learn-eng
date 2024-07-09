@@ -13,7 +13,7 @@ COPY . .
 # Install node packages, install serve, build the app, and remove dependencies at the end
 RUN npm install
 
-RUN npm run build
+# RUN npm run build
 
 EXPOSE 3000
 
