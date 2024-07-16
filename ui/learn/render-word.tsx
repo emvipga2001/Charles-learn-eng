@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { FormattedListWord } from "../../lib/definitions";
 import clsx from "clsx";
 import { count } from "console";
+import CongratulationPage from "../congratulation";
 
 export default function RenderWord({
-  params,
+  params,children
 }: {
   params: FormattedListWord[];
+  children: React.ReactNode
 }) {
   const [listWords, setListWords] = useState<FormattedListWord[]>(params);
   const [shuffledWord, setShuffledWord] = useState<FormattedListWord[]>([]);
@@ -51,6 +53,8 @@ export default function RenderWord({
   ]);
   const [maxlengthWord, setMaxlengthWord] = useState(0);
   const [taskBarColor, setTaskBarColor] = useState(0);
+  const [isChoiceEng, setIsChoiceEng] = useState(-1);
+  const [isChoiceVie, setIsChoiceVie] = useState(-1);
 
   const Eng = 1;
   const Vie = 2;
@@ -69,7 +73,7 @@ export default function RenderWord({
       }, 1000);
     }
   }, [isError]);
-
+  
   useEffect(() => {
     if (countCorrect == 2) {
       setCountCorrect(0);
@@ -217,11 +221,18 @@ export default function RenderWord({
       } else {
         setIsError({ error: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
       }
+      setIsChoiceEng(-1);
+      setIsChoiceVie(-1);
     }
   }
   
-  if(taskBarColor >= 99.9){
-    return (<h1>DONE</h1>)
+  if(true){
+    return (
+      <>
+        {children}
+        <CongratulationPage />
+      </>
+    )
   }
 
   return (
@@ -238,14 +249,15 @@ export default function RenderWord({
             })}>
               <button
                 key={word.id + "ENG"}
-                onClick={() => compareWord(Eng, word.compare_id, index, word.id)}
+                onClick={() => {setIsChoiceEng(index);compareWord(Eng, word.compare_id, index, word.id)}}
                 className={clsx(
-                  "opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 text-7xl transition-all border w-full rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 lg:text-5xl focus:bg-blue-500 focus:text-white hover:bg-blue-500 hover:text-white",
+                  "opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 text-7xl transition-all border w-full rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 lg:text-5xl focus:text-white hover:bg-blue-500 hover:text-white",
                   {
                     '!opacity-[1] !pointer-events-auto': !isDisEng[index].isDisable && !isEndEng[index].endDisable,
                     'bg-red-700 focus:bg-red-700': isError.error && isError.indexEng == index,
                     'bg-transparent': !isError.error && isError.indexEng !== index,
                     '!opacity-50 !pointer-events-none': isEndEng[index].endDisable,
+                    '!bg-blue-500': isChoiceEng == index
                   })}
                 disabled={isEndEng[index].endDisable}
               >
@@ -261,14 +273,15 @@ export default function RenderWord({
             })}>
               <button
                 key={word.id + "ENG"}
-                onClick={() => compareWord(Vie, word.compare_id, index, word.id)}
+                onClick={() => {setIsChoiceVie(index);compareWord(Vie, word.compare_id, index, word.id)}}
                 className={clsx(
-                  "opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 text-7xl transition-all w-full border rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 lg:text-5xl focus:bg-blue-500 focus:text-white hover:bg-blue-500 hover:text-white",
+                  "opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 text-7xl transition-all w-full border rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 lg:text-5xl focus:text-white hover:bg-blue-500 hover:text-white",
                   {
                     '!opacity-[1] !pointer-events-auto': !isDisVie[index].isDisable && !isEndVie[index].endDisable,
                     'bg-red-700 focus:bg-red-700': isError.error && isError.indexVie == index,
                     'bg-transparent': !isError.error && isError.indexVie !== index,
-                    '!opacity-50 !pointer-events-none': isEndVie[index].endDisable
+                    '!opacity-50 !pointer-events-none': isEndVie[index].endDisable,
+                    '!bg-blue-500': isChoiceVie == index
                   })}
                 disabled={isEndVie[index].endDisable}
               >

@@ -6,8 +6,9 @@ export default async function Page() {
   const listWord = await getListWord();
   return (
     <div>
-      <HeaderComponent content='Learn English' />
-      <BodyComponent listWord={listWord}/>
+      <BodyComponent listWord={listWord}>
+        <HeaderComponent content='Learn English' />
+      </BodyComponent>
     </div>
   );
 }

@@ -14,6 +14,5 @@ export async function getListWord() {
   const db = await getDb();
   const getDataCollection = await db.collection('Word').find({}).toArray();
   const validatedData = z.array(FormSchema).parse(getDataCollection);
-  await new Promise(resolve => setTimeout(resolve, 4000));
   return validatedData;
 }
