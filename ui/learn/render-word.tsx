@@ -226,11 +226,11 @@ export default function RenderWord({
     }
   }
   
-  if(true){
+  if(taskBarColor >= 99.9){
     return (
       <>
-        {children}
         <CongratulationPage />
+        {children}
       </>
     )
   }
