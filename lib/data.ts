@@ -12,7 +12,7 @@ const FormSchema = z.object({
 
 export async function getListWord() {
   const db = await getDb();
-  const getDataCollection = await db.collection('Word').find({}).toArray();
+  const getDataCollection = await db.collection('db_words').find({}).toArray();
   const validatedData = z.array(FormSchema).parse(getDataCollection);
   return validatedData;
 }

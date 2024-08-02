@@ -1,31 +1,34 @@
-import { Suspense } from "react";
-import HelloWorld from "../ui/hello-world";
 import Link from "next/link";
-import { ArrowRightIcon, BookOpenIcon, HomeIcon } from '@heroicons/react/20/solid';
 import { Button } from "../ui/button";
+import Image from "next/image";
+import cardGameIcon from "../public/card-game.svg"
+import listWordsIcon from "../public/list-words.svg"
 
 export default async function Page() {
-  
-  async function getContent() {
-    await new Promise(reslove => setTimeout(reslove, 1000))
-    return "Hello world!!!";
-  }
-  const content = await getContent();
   return (
     <>
       <h1>Welcome to</h1>
-      <Suspense fallback={"Loading....."}>
-        <HelloWorld/>
-      </Suspense>
+      <h1>Charles Learn English!!!</h1>
       <div className="grid grid-cols-2">
-        <Link href="/home">
+        <Link href="/list-words">
           <Button className="mt-4 mx-auto">
-            Home &nbsp;<HomeIcon className="ml-auto h-5 w-5 text-gray-50" />
+            List Words &nbsp;<Image
+              priority
+              src={listWordsIcon}
+              alt="List Words"
+              width={25}
+            />
           </Button>
         </Link>
         <Link href="/learn">
           <Button className="mt-4 mx-auto">
-            Learn English &nbsp;<BookOpenIcon className="ml-auto h-5 w-5 text-gray-50" />
+            Flash Card English &nbsp;<Image
+              priority
+              src={cardGameIcon}
+              alt="Flash-Card game"
+              width={25}
+              color="white"
+            />
           </Button>
         </Link>
       </div>
