@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -20,13 +20,10 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
+  background: linear-gradient(to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-  font-family: 'Pacifico', sans-serif;
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+  font-family: 'Noto Serif', sans-serif;
 }
 
 @layer utilities {
@@ -34,12 +31,16 @@ body {
     text-wrap: balance;
   }
 
-  .darkmode-handle:checked + div{
+  .darkmode-handle:checked+div {
     background-color: white;
   }
 
-  .darkmode-handle:checked + div .darkmode-spinner{
+  .darkmode-handle:checked+div .darkmode-spinner {
     transform: translateX(30px);
     background-color: black;
+  }
+
+  .word-list-container::-webkit-scrollbar {
+    display: none;
   }
 }
