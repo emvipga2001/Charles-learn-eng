@@ -28,10 +28,10 @@ export default function Words({
         setIsSorted(!isSorted);
     }
     useEffect(() => {
-        let container = document.getElementsByClassName('word-list-container');
-        if (container.length > 0) {
-            container[0].style.maxHeight = screen.height - 290 + "px";
-        }
+        // let container = document.getElementsByClassName('word-list-container');
+        // if (container.length > 0) {
+        //     container[0].style.maxHeight = screen.height - 290 + "px";
+        // }
     }, [])
     return (
         <div>
