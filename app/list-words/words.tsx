@@ -7,6 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Button from '@mui/material/Button';
 import { FormattedListWord } from '../../lib/definitions';
 import HeaderComponent from '../../ui/header-component';
+import { getMoreListWord } from '../../lib/data';
 
 export default function Words({
     params
@@ -15,6 +16,7 @@ export default function Words({
 }) {
     const [isSorted, setIsSorted] = useState(false);
     const [sortedParams, setSortedParams] = useState<FormattedListWord[]>(params);
+    const [limit, setLimit] = useState(10);
 
     function toggleSort() {
         if (isSorted) {
@@ -27,12 +29,7 @@ export default function Words({
         }
         setIsSorted(!isSorted);
     }
-    useEffect(() => {
-        // let container = document.getElementsByClassName('word-list-container');
-        // if (container.length > 0) {
-        //     container[0].style.maxHeight = screen.height - 290 + "px";
-        // }
-    }, [])
+
     return (
         <div>
             <div className='flex justify-between'>
@@ -43,7 +40,7 @@ export default function Words({
                     </span>
                 </Button>
             </div>
-            <div className='word-list-container border rounded-2xl dark:border-[#FFFFFF80] max-h-[790px] overflow-y-auto'>
+            <div className='word-list-container border rounded-2xl dark:border-[#FFFFFF80] overflow-y-auto max-h-[680px] md:max-h-[1000px] sm:max-h-[850px] lg:max-h-[1200px] xl:max-h-[790px]'>
                 <List>
                     {sortedParams.map((word: FormattedListWord, index: number) => (
                         <div key={index}>
@@ -59,11 +56,18 @@ export default function Words({
                                     }
                                 />
                             </ListItem>
-                            {index !== params.length - 1 && (
-                                <Divider variant="fullWidth" component="li" className='dark:bg-white dark:opacity-50' />
-                            )}
+                            <Divider variant="fullWidth" component="li" className='dark:bg-white dark:opacity-50' />
                         </div>
                     ))}
+                    <ListItem alignItems="flex-start">
+                        <ListItemText
+                            primary={
+                                <span className='text-2xl text-blue-500' onClick={()=>{
+                                    getMoreListWord();
+                                }}>Add more...</span>
+                            }
+                        />
+                    </ListItem>
                 </List>
             </div>
         </div>

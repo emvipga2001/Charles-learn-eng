@@ -9,7 +9,7 @@ export default async function Page() {
     <>
       <h1>Welcome to</h1>
       <h1>Charles Learn English!!!</h1>
-      <div className="grid grid-cols-2">
+      <div className="grid grid-cols-2 justify-items-center">
         <Link href="/list-words">
           <Button className="mt-4 mx-auto">
             List Words &nbsp;<Image
