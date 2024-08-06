@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -7,14 +8,20 @@ import ListItemText from '@mui/material/ListItemText';
 import Button from '@mui/material/Button';
 import { FormattedListWord } from '../../lib/definitions';
 import HeaderComponent from '../../ui/header-component';
+import { getMoreListWord } from '../../lib/data';
 
 export default function Words({
-    params
+    params, maxLength
 }: {
     params: FormattedListWord[];
+    maxLength: number;
 }) {
     const [isSorted, setIsSorted] = useState(false);
     const [sortedParams, setSortedParams] = useState<FormattedListWord[]>(params);
+    
+    useEffect(()=>{
+        setSortedParams(params);
+    },[params])
 
     function toggleSort() {
         if (isSorted) {
@@ -27,12 +34,7 @@ export default function Words({
         }
         setIsSorted(!isSorted);
     }
-    useEffect(() => {
-        // let container = document.getElementsByClassName('word-list-container');
-        // if (container.length > 0) {
-        //     container[0].style.maxHeight = screen.height - 290 + "px";
-        // }
-    }, [])
+
     return (
         <div>
             <div className='flex justify-between'>
@@ -43,7 +45,7 @@ export default function Words({
                     </span>
                 </Button>
             </div>
-            <div className='word-list-container border rounded-2xl dark:border-[#FFFFFF80] max-h-[790px] overflow-y-auto'>
+            <div className='word-list-container border rounded-2xl dark:border-[#FFFFFF80] overflow-y-auto max-h-autoMaxHeightList'>
                 <List>
                     {sortedParams.map((word: FormattedListWord, index: number) => (
                         <div key={index}>
@@ -59,11 +61,20 @@ export default function Words({
                                     }
                                 />
                             </ListItem>
-                            {index !== params.length - 1 && (
+                            {index !== maxLength - 1 && (
                                 <Divider variant="fullWidth" component="li" className='dark:bg-white dark:opacity-50' />
                             )}
                         </div>
                     ))}
+                    {sortedParams.length !== maxLength && <ListItem alignItems="flex-start">
+                        <ListItemText
+                            primary={
+                                <span className='text-2xl text-blue-500 cursor-pointer' onClick={()=>{
+                                    getMoreListWord();
+                                }}>Add more...</span>
+                            }
+                        />
+                    </ListItem>}
                 </List>
             </div>
         </div>
