@@ -60,7 +60,7 @@ export default function RenderWord({
   const Vie = 2;
 
   useEffect(() => {
-    const finishList = handleShuffledList(duplicateList(listWords));
+    const finishList = handleShuffledList(listWords);
     setListWords(finishList);
     setShuffledWord(handleShuffledList(finishList.slice(0, 5)));
     setMaxlengthWord(100 / finishList.length)
@@ -106,18 +106,18 @@ export default function RenderWord({
     return shuffledList;
   }
 
-  function duplicateList(listWord: FormattedListWord[]) {
-    const shuffledList = [...listWord];
-    for (let i = 0; i < (shuffledList.length % 2); i++) {
-      const j = Math.floor(Math.random() * shuffledList.length);
-      const newElement: FormattedListWord ={
-        ...shuffledList[j],
-        id: shuffledList[shuffledList.length - 1].id + 1,
-      }
-      shuffledList.push(newElement);
-    }
-    return shuffledList;
-  }
+  // function duplicateList(listWord: FormattedListWord[]) {
+  //   const shuffledList = [...listWord];
+  //   for (let i = 0; i < (shuffledList.length % 2); i++) {
+  //     const j = Math.floor(Math.random() * shuffledList.length);
+  //     const newElement: FormattedListWord ={
+  //       ...shuffledList[j],
+  //       id: shuffledList[shuffledList.length - 1].id + 1,
+  //     }
+  //     shuffledList.push(newElement);
+  //   }
+  //   return shuffledList;
+  // }
 
   function hanldeDisable(indexEng: number, indexVie: number, isDisable: boolean) {
     setIsDisEng(preVal => {
@@ -251,7 +251,7 @@ export default function RenderWord({
                 key={word.id + "ENG"}
                 onClick={() => {setIsChoiceEng(index);compareWord(Eng, word.compare_id, index, word.id)}}
                 className={clsx(
-                  "opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 text-7xl transition-all border w-full rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 lg:text-5xl focus:text-white hover:bg-blue-500 hover:text-white",
+                  "whitespace-nowrap flex justify-center items-center overflow-hidden text-autoSizeTextLearn opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 transition-all border w-full rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 focus:text-white hover:bg-blue-500 hover:text-white",
                   {
                     '!opacity-[1] !pointer-events-auto': !isDisEng[index].isDisable && !isEndEng[index].endDisable,
                     'bg-red-700 focus:bg-red-700': isError.error && isError.indexEng == index,
@@ -275,7 +275,7 @@ export default function RenderWord({
                 key={word.id + "ENG"}
                 onClick={() => {setIsChoiceVie(index);compareWord(Vie, word.compare_id, index, word.id)}}
                 className={clsx(
-                  "opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 text-7xl transition-all w-full border rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 lg:text-5xl focus:text-white hover:bg-blue-500 hover:text-white",
+                  "whitespace-nowrap flex justify-center items-center overflow-hidden text-autoSizeTextLearn opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 transition-all w-full border rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 focus:text-white hover:bg-blue-500 hover:text-white",
                   {
                     '!opacity-[1] !pointer-events-auto': !isDisVie[index].isDisable && !isEndVie[index].endDisable,
                     'bg-red-700 focus:bg-red-700': isError.error && isError.indexVie == index,

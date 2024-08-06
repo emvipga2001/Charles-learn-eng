@@ -11,27 +11,24 @@ const FormSchema = z.object({
   vietnamese_word: z.string()
 });
 
-let limit = 5;
+let limit = 10;
 
 export async function getListWord() {
   const db = await getDb();
-  const getDataCollection = await db.collection('db_words').find({}).toArray();
+  const getDataCollection = await db.collection('db_words').aggregate([{ $sample: { size: 20 } }]).toArray();
   const validatedData = z.array(FormSchema).parse(getDataCollection);
   return validatedData;
 }
 
 export async function getListWordLimit() {
   const db = await getDb();
-  const getDataCollection = await db.collection('db_words').find({}).limit(5).toArray();
+  const getDataCollection = await db.collection('db_words').find({}).limit(limit).toArray();
   const validatedData = z.array(FormSchema).parse(getDataCollection);
-  return validatedData;
+  const getCountDocuments = await db.collection('db_words').countDocuments();
+  return [validatedData, getCountDocuments] as const;
 }
 
 export async function getMoreListWord() {
-  const db = await getDb();
-  const getDataCollection = await db.collection('db_words').find({}).limit(limit).toArray();
-  const validatedData = z.array(FormSchema).parse(getDataCollection);
-  limit += 5;
-  revalidatePath('/dashboard/invoices');
-  return validatedData;
+  limit += 10;
+  revalidatePath('/list-words');
 }

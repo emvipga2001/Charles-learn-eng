@@ -37,7 +37,7 @@ export default function BodyComponent({ listWord, children }: {
         <>
           {children}
           <Button onClick={startQuizz}>
-            Start quizz test word <SparklesIcon className="ml-1 h-5 w-5 text-gray-50" />
+            Start quizz test <SparklesIcon className="ml-1 h-5 w-5 text-gray-50" />
           </Button>
         </>
       )}
