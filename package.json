@@ -9,12 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@emotion/cache": "^11.13.1",
-    "@emotion/react": "^11.13.0",
-    "@emotion/styled": "^11.13.0",
     "@heroicons/react": "^2.0.18",
-    "@mui/icons-material": "^5.16.6",
-    "@mui/material-nextjs": "^5.16.6",
     "clsx": "^2.0.0",
     "fs-extra": "^11.2.0",
     "mongodb": "^6.8.0",
