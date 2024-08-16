@@ -1,10 +1,10 @@
 "use client"
 
 import React, { useEffect, useState } from 'react'
-import { Button } from '../button';
 import { SparklesIcon } from '@heroicons/react/20/solid';
 import RenderWord from './render-word';
 import { FormattedListWord } from '../../lib/definitions';
+import { Button } from '@/components/ui/button';
 
 export default function BodyComponent({ listWord, children }: {
   listWord: FormattedListWord[],
@@ -36,7 +36,7 @@ export default function BodyComponent({ listWord, children }: {
       {!isStart && (
         <>
           {children}
-          <Button onClick={startQuizz}>
+          <Button className='bg-blue-500 hover:bg-blue-600' onClick={startQuizz}>
             Start quizz test <SparklesIcon className="ml-1 h-5 w-5 text-gray-50" />
           </Button>
         </>

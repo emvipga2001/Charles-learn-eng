@@ -251,13 +251,13 @@ export default function RenderWord({
                 key={word.id + "ENG"}
                 onClick={() => {setIsChoiceEng(index);compareWord(Eng, word.compare_id, index, word.id)}}
                 className={clsx(
-                  "whitespace-nowrap flex justify-center items-center overflow-hidden text-autoSizeTextLearn opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 transition-all border w-full rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 focus:text-white hover:bg-blue-500 hover:text-white",
+                  "whitespace-nowrap flex justify-center items-center overflow-hidden text-autoSizeTextLearn opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 transition-all border w-full rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 focus:text-white hover:bg-blue-500 hover:bg-blue-600 hover:text-white",
                   {
                     '!opacity-[1] !pointer-events-auto': !isDisEng[index].isDisable && !isEndEng[index].endDisable,
                     'bg-red-700 focus:bg-red-700': isError.error && isError.indexEng == index,
                     'bg-transparent': !isError.error && isError.indexEng !== index,
                     '!opacity-50 !pointer-events-none': isEndEng[index].endDisable,
-                    '!bg-blue-500': isChoiceEng == index
+                    '!bg-blue-500 hover:bg-blue-600': isChoiceEng == index
                   })}
                 disabled={isEndEng[index].endDisable}
               >
@@ -275,13 +275,13 @@ export default function RenderWord({
                 key={word.id + "ENG"}
                 onClick={() => {setIsChoiceVie(index);compareWord(Vie, word.compare_id, index, word.id)}}
                 className={clsx(
-                  "whitespace-nowrap flex justify-center items-center overflow-hidden text-autoSizeTextLearn opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 transition-all w-full border rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 focus:text-white hover:bg-blue-500 hover:text-white",
+                  "whitespace-nowrap flex justify-center items-center overflow-hidden text-autoSizeTextLearn opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 transition-all w-full border rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 focus:text-white hover:bg-blue-500 hover:bg-blue-600 hover:text-white",
                   {
                     '!opacity-[1] !pointer-events-auto': !isDisVie[index].isDisable && !isEndVie[index].endDisable,
                     'bg-red-700 focus:bg-red-700': isError.error && isError.indexVie == index,
                     'bg-transparent': !isError.error && isError.indexVie !== index,
                     '!opacity-50 !pointer-events-none': isEndVie[index].endDisable,
-                    '!bg-blue-500': isChoiceVie == index
+                    '!bg-blue-500 hover:bg-blue-600': isChoiceVie == index
                   })}
                 disabled={isEndVie[index].endDisable}
               >

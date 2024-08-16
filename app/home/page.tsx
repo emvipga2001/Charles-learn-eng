@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Button } from "../../ui/button";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
+import { Button } from "@/components/ui/button";
 
 export default function Page() {
   return (

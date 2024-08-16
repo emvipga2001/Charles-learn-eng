@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import ButtonDarkMode from "../ui/button-dark-mode";
+import { ThemeProvider } from "@/components/theme-provider"
+import { ModeToggle } from "../ui/button-dark-mode";
+import Header from "./components/header";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -13,12 +15,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <div className="mx-auto text-center p-5 min-h-screen bg-white text-black dark:bg-black dark:text-white transition-colors">
-          {children}
-          <ButtonDarkMode />
-        </div>
+        <ThemeProvider
+          attribute='class'
+          defaultTheme='system'
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="mt-5">
+            <Header />
+          </div>
+          <div className="mx-auto text-center p-5 min-h-screen bg-white text-black dark:bg-black dark:text-white transition-colors">
+            {children}
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );
