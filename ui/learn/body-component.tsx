@@ -36,9 +36,11 @@ export default function BodyComponent({ listWord, children }: {
       {!isStart && (
         <>
           {children}
-          <Button className='bg-blue-500 hover:bg-blue-600' onClick={startQuizz}>
-            Start quizz test <SparklesIcon className="ml-1 h-5 w-5 text-gray-50" />
-          </Button>
+          <div className='flex'>
+            <Button className='bg-black dark:bg-dark-button dark:text-white dark:hover:bg-dark-hover-button dark:border-dark-border-button' onClick={startQuizz}>
+              Start quizz test <SparklesIcon className="ml-1 h-5 w-5 text-gray-50" />
+            </Button>
+          </div>
         </>
       )}
       {countdown > 0 && (

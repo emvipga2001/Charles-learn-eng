@@ -31,6 +31,13 @@ const config: Config = {
       maxHeight: {
         'autoMaxHeightList': 'calc(100vh - 170px);'
       },
+      backgroundColor: {
+        'dark-button': '#212124',
+        'dark-hover-button': '#555555',
+      },
+      borderColor:{
+        'dark-border-button': '#555555'
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

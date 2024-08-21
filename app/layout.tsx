@@ -26,7 +26,7 @@ export default function RootLayout({
           <div className="mt-5">
             <Header />
           </div>
-          <div className="mx-auto text-center p-5 min-h-screen bg-white text-black dark:bg-black dark:text-white transition-colors">
+          <div className="mx-auto text-center p-5 min-h-[90svh] bg-white text-black dark:bg-black dark:text-white transition-colors">
             {children}
           </div>
         </ThemeProvider>
