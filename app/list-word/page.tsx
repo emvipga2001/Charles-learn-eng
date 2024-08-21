@@ -1,15 +1,45 @@
-import { Suspense } from 'react';
-import { getListWord, getListWordLimit } from '../../lib/data';
+'use client'
+
+import { Suspense, useEffect, useState } from 'react';
 import Loading from '@/loading';
 import Render from './render';
-// import Words from './words';
+import { useWordStore } from '@/stores/useListWord';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
+import AddWord from './add-word';
+import clsx from 'clsx';
 
-export default async function Page() {
-  const [listWord, totalCount] = await getListWordLimit();
-  
+enum listConten {
+  LIST_WORD = 'LIST_WORD',
+  ADD_WORD = 'ADD_WORD',
+}
+
+export default function Page() {
+  const { words, addMore } = useWordStore();
+  const [ content, setContet ] = useState<string>(listConten.LIST_WORD);
+  useEffect(() => {
+    if(words.length == 0){
+      addMore();
+    }
+  }, [words, addMore])
+
   return (
-    <Suspense fallback={<Loading/>}>
-      <Render listWord={listWord}/>
+    <Suspense fallback={<Loading />}>
+      <Tabs defaultValue="list-word" className="w-full">
+        <TabsList className="grid w-full h-14 grid-cols-2 bg-secondary dark:bg-dark-hover-button p-2 rounded-xl gap-4">
+          <TabsTrigger value="list-word" onClick={()=>setContet(listConten.LIST_WORD)} className={clsx({'text-white bg-black rounded-lg': content == listConten.LIST_WORD})}>List Word</TabsTrigger>
+          <TabsTrigger value="add-word" onClick={()=>setContet(listConten.ADD_WORD)} className={clsx({'text-white bg-black rounded-lg': content == listConten.ADD_WORD})}>Add Word</TabsTrigger>
+        </TabsList>
+        <TabsContent value="list-word">
+          <div className='py-5'>
+            <Render listWord={words} />
+          </div>
+        </TabsContent>
+        <TabsContent value="add-word">
+          <div className='py-5'>
+            <AddWord />
+          </div>
+        </TabsContent>
+      </Tabs>
     </Suspense>
   );
 }
