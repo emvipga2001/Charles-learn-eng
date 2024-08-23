@@ -20,13 +20,13 @@ export default function Render({ listWord }: { listWord: FormattedListWord[] }) 
                     >
                         <ResizablePanel defaultSize={100}>
                             <div className="flex h-full items-center justify-center p-6 whitespace-nowrap">
-                                <span className="font-semibold">{word.english_word}</span>
+                                <span className="font-semibold select-none">{word.english_word}</span>
                             </div>
                         </ResizablePanel>
                         <ResizableHandle withHandle />
                         <ResizablePanel defaultSize={0}>
                             <div className="flex h-full items-center justify-center p-6 whitespace-nowrap">
-                                <span className="font-semibold">{word.vietnamese_word}</span>
+                                <span className="font-semibold select-none">{word.vietnamese_word}</span>
                             </div>
                         </ResizablePanel>
                     </ResizablePanelGroup>

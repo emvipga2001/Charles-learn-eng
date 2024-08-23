@@ -26,12 +26,11 @@ export async function getListWordLimit(limit: number) {
   return [validatedData, getCountDocuments] as const;
 }
 
-export async function insertWord(eng: string, vn: string) {
+export async function insertWord(eng: string, vn: string, id: number) {
   const db = await getDb();
-  const getCountDocuments = await db.collection('db_words').countDocuments();
   await db.collection('db_words').insertOne({
-    id: getCountDocuments + 1,
-    compare_id: getCountDocuments  + 1,
+    id: id,
+    compare_id: id,
     english_word: eng,
     vietnamese_word: vn
   }).catch(() => {
