@@ -28,16 +28,37 @@ export async function getListWordLimit(limit: number) {
 
 export async function insertWord(eng: string, vn: string, id: number) {
   const db = await getDb();
+  const getDataCollection = await db.collection('db_words').aggregate([
+    { $sort: { id: -1 } }
+  ]).limit(1).toArray();
+  const validatedData = z.array(FormSchema).parse(getDataCollection);
   await db.collection('db_words').insertOne({
-    id: id,
-    compare_id: id,
+    id: validatedData[0].id + 1,
+    compare_id: validatedData[0].id + 1,
     english_word: eng,
     vietnamese_word: vn
   }).catch(() => {
     return false;
   }
   ).then(() => {
-    revalidatePath('/dashboard/invoices');
+    revalidatePath('/list-word');
+    return true;
+  });
+}
+
+export async function editWord(eng: string, vn: string, id: number) {
+  const db = await getDb();
+  await db.collection('db_words').updateOne({
+    id: id
+  }, {
+    $set: {
+      english_word: eng,
+      vietnamese_word: vn
+    }
+  }).catch(() => {
+    return false;
+  }
+  ).then(() => {
     return true;
   });
 }

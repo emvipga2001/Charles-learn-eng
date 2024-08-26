@@ -14,32 +14,28 @@ enum listConten {
 }
 
 export default function Page() {
-  const { words, addMore } = useWordStore();
-  const [ content, setContet ] = useState<string>(listConten.LIST_WORD);
+  const { words, addMore, loading } = useWordStore();
+  const [content, setContet] = useState<string>(listConten.LIST_WORD);
   useEffect(() => {
-    if(words.length == 0){
+    if (words.length == 0) {
       addMore();
     }
   }, [words, addMore])
 
   return (
-    <Suspense fallback={<Loading />}>
-      <Tabs defaultValue="list-word" className="w-full">
-        <TabsList className="grid w-full h-14 grid-cols-2 bg-secondary dark:bg-dark-hover-button p-2 rounded-xl gap-4">
-          <TabsTrigger value="list-word" onClick={()=>setContet(listConten.LIST_WORD)} className={clsx({'text-white bg-black rounded-lg': content == listConten.LIST_WORD})}>List Word</TabsTrigger>
-          <TabsTrigger value="add-word" onClick={()=>setContet(listConten.ADD_WORD)} className={clsx({'text-white bg-black rounded-lg': content == listConten.ADD_WORD})}>Add Word</TabsTrigger>
-        </TabsList>
-        <TabsContent value="list-word">
-          <div className='py-5'>
-            <Render listWord={words} />
-          </div>
-        </TabsContent>
-        <TabsContent value="add-word">
-          <div className='py-5'>
-            <AddWord />
-          </div>
-        </TabsContent>
-      </Tabs>
-    </Suspense>
+    <Tabs defaultValue="list-word" className="w-full">
+      <TabsList className="grid w-full h-14 grid-cols-2 bg-secondary dark:bg-dark-hover-button p-2 rounded-xl gap-4">
+        <TabsTrigger value="list-word" onClick={() => setContet(listConten.LIST_WORD)} className={clsx({ 'text-white bg-black rounded-lg': content == listConten.LIST_WORD })}>List Word</TabsTrigger>
+        <TabsTrigger value="add-word" onClick={() => setContet(listConten.ADD_WORD)} className={clsx({ 'text-white bg-black rounded-lg': content == listConten.ADD_WORD })}>Add Word</TabsTrigger>
+      </TabsList>
+      <TabsContent value="list-word">
+        <Render listWord={words} />
+      </TabsContent>
+      <TabsContent value="add-word">
+        <div className='py-5'>
+          <AddWord />
+        </div>
+      </TabsContent>
+    </Tabs>
   );
 }
