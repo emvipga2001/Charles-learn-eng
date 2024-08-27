@@ -1,18 +1,25 @@
 "use client"
 
 import React, { useEffect, useState } from 'react'
-import { SparklesIcon } from '@heroicons/react/20/solid';
-import RenderWord from './render-word';
+import { PuzzlePieceIcon, SparklesIcon } from '@heroicons/react/20/solid';
+import MatchingGame from './matching-game';
 import { FormattedListWord } from '../../lib/definitions';
 import { Button } from '@/components/ui/button';
+import Hangman from './hangman-game';
 
+enum typeGame {
+  None = 0,
+  Hangman = 1,
+  MatchingGame = 2
+}
 export default function BodyComponent({ listWord, children }: {
   listWord: FormattedListWord[],
   children: React.ReactNode
 }) {
-  const [isActive, setIsActive] = useState<boolean>(false);
+  const [isActive, setIsActive] = useState<boolean>(true);
   const [countdown, setCountdown] = useState<number>(0);
   const [isStart, setIsStart] = useState<boolean>(false);
+  const [isGame, setIsGame] = useState<typeGame>(typeGame.Hangman);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -21,24 +28,27 @@ export default function BodyComponent({ listWord, children }: {
         setCountdown(countdown - 1);
       }, 1000);
     } else if (isActive && countdown == 0) {
-      setIsActive(false);
       setIsStart(true);
     }
     return () => clearTimeout(timer);
   }, [isActive, countdown]);
 
-  function startQuizz() {
+  function startQuizz(typeGame: typeGame) {
     setIsActive(true);
     setCountdown(5);
+    setIsGame(typeGame)
   }
   return (
     <>
       {!isStart && (
         <>
           {children}
-          <div className='flex'>
-            <Button className='bg-black dark:bg-dark-button dark:text-white dark:hover:bg-dark-hover-button dark:border-dark-border-button' onClick={startQuizz}>
+          <div className='flex gap-4'>
+            <Button className='bg-black dark:bg-dark-button dark:text-white dark:hover:bg-dark-hover-button dark:border-dark-border-button' onClick={() => startQuizz(typeGame.MatchingGame)}>
               Start quizz test <SparklesIcon className="ml-1 h-5 w-5 text-gray-50" />
+            </Button>
+            <Button className='bg-black dark:bg-dark-button dark:text-white dark:hover:bg-dark-hover-button dark:border-dark-border-button' onClick={() => startQuizz(typeGame.Hangman)}>
+              Hangman <PuzzlePieceIcon className="ml-1 h-5 w-5 text-gray-50" />
             </Button>
           </div>
         </>
@@ -49,11 +59,19 @@ export default function BodyComponent({ listWord, children }: {
         </div>
       )}
       {isStart && (
-        <div className=''>
-          <RenderWord params={listWord} >
-            {children}
-          </RenderWord>
-        </div>
+        isGame === typeGame.MatchingGame ? (
+          <div className=''>
+            <MatchingGame params={listWord}>
+              {children}
+            </MatchingGame>
+          </div>
+        ) : isGame === typeGame.Hangman ? (
+          <div className=''>
+            <Hangman params={listWord}> 
+              {children}
+            </Hangman>
+          </div>
+        ) : null
       )}
     </>
   )
