@@ -9,8 +9,6 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 
 export default function Hangman({
     params, children
@@ -19,28 +17,27 @@ export default function Hangman({
     children: React.ReactNode
 }) {
     const [listWords, setListWords] = useState<FormattedListWord[]>(params);
-    const [word, setWord] = useState<string>(listWords[listWords.length - 1].english_word);
-    const [compareWord, setCompareWord] = useState<string>(listWords[listWords.length - 1].english_word);
+    const [listWordsHide, setListWordsHide] = useState<string[]>([]);
+    const [word, setWord] = useState<string>();
     
     useEffect(() => {
-        setListWords(preVal => {
-            const updateData = [...preVal].map((val, i) => {
+        const updateData = [...listWords].map((val, i) => {
+            let newWord = { ...val };
+            for (let i = 1; i < 3; i++) {
                 let rand = Math.floor(Math.random() * val.english_word.length - 1 + i)
-                return setCharAt(val.english_word, rand, "_")
-            });
-
-            return [...preVal];
-        })
-    }, [listWords])
+                newWord.english_word = setCharAt(newWord.english_word, rand, "_");
+            }
+            return newWord.english_word;
+        });
+        setListWordsHide(updateData);
+    }, []);
+    
 
     useEffect(() => {
-        for (let i = 0; i < 2; i++) {
-            if (word.length > 0) {
-                let rand = Math.floor(Math.random() * word.length - 1 + i)
-                setWord(setCharAt(word, rand, "_"))
-            }
+        if (listWordsHide.length > 0) {
+            setWord(listWordsHide[listWordsHide.length - 1])
         }
-    }, [listWords, word])
+    }, [listWordsHide])
 
     function setCharAt(str: string, index: number, chr: string) {
         if (index > str.length - 1) return str;
@@ -48,22 +45,31 @@ export default function Hangman({
     }
 
     function nextWord() {
+        setListWordsHide(preVal => {
+            const updateData = [...preVal];
+            updateData.pop();
+            return updateData;
+        })
         setListWords(preVal => {
             const updateData = [...preVal];
             updateData.pop();
-            setWord(updateData[updateData.length - 1].english_word)
-            setCompareWord(updateData[updateData.length - 1].english_word)
             return updateData;
         })
+    }
+
+    function addWord(char: string){
+        
     }
 
     return (
         <div className='transition-all'>
             <Card className="w-full min-h-[80svh]">
                 <CardHeader>
-                    <CardTitle className='text-6xl'>{word}</CardTitle>
+                    <CardTitle className='text-6xl w-fit mx-auto'>{word}</CardTitle>
+                    <CardDescription className='text-xl py-2'>{listWords[listWords.length - 1].vietnamese_word}</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className='flex'>
+                    <Button>A</Button>
                 </CardContent>
                 <CardFooter className="flex justify-between">
                     <Button variant="outline">Cancel</Button>
