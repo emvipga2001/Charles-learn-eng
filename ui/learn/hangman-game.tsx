@@ -10,6 +10,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import Keyboard from '@/components/key-board';
+import clsx from 'clsx';
 
 export default function Hangman({
     params, children
@@ -21,6 +22,7 @@ export default function Hangman({
     const [listWordsHide, setListWordsHide] = useState<string[]>([]);
     const [word, setWord] = useState<string[]>([]);
     const [indexHide, setIndexHide] = useState<number[]>([]);
+    const [error, setError] = useState<boolean>(false);
 
     useEffect(() => {
         const updateData = [...listWords].map((val, i) => {
@@ -34,6 +36,14 @@ export default function Hangman({
         setListWordsHide(updateData);
     }, [listWords]);
 
+    useEffect(() => {
+      if(error){
+        setTimeout(() => {
+            setError(false);
+        }, 1000);
+      }
+    }, [error])
+    
     useEffect(() => {
         if (listWordsHide.length > 0) {
             setWord(listWordsHide[listWordsHide.length - 1].split(""))
@@ -64,6 +74,8 @@ export default function Hangman({
                 updateData.pop();
                 return updateData;
             })
+        } else {
+            setError(true);
         }
     }
 
@@ -98,7 +110,10 @@ export default function Hangman({
         <div className='transition-all'>
             <Card className="lg:mx-auto lg:w-[40%] min-h-[80svh]">
                 <CardHeader>
-                    <CardTitle className='text-5xl w-fit mx-auto'>
+                    <CardTitle className={clsx(
+                        'text-5xl w-fit mx-auto',
+                        error && 'animate-shake text-red-600'
+                    )}>
                         {word?.map((val: string, index: number) => {
                             if (val !== "_" && !indexHide.includes(index)) {
                                 return (
