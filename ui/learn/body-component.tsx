@@ -16,7 +16,7 @@ export default function BodyComponent({ listWord, children }: {
   listWord: FormattedListWord[],
   children: React.ReactNode
 }) {
-  const [isActive, setIsActive] = useState<boolean>(true);
+  const [isActive, setIsActive] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number>(0);
   const [isStart, setIsStart] = useState<boolean>(false);
   const [isGame, setIsGame] = useState<typeGame>(typeGame.Hangman);
