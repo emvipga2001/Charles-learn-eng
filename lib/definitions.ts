@@ -11,3 +11,8 @@ export const formSchema = z.object({
   english_word: z.string(),
   vietnamese_word: z.string()
 })
+
+export type User = {
+  email: string;
+  password: string;
+};
