@@ -108,7 +108,7 @@ export default function Hangman({
 
     return (
         <div className='transition-all'>
-            <Card className="lg:mx-auto lg:w-[40%] min-h-[80svh]">
+            <Card className="lg:mx-auto lg:w-[40%] bg-transparent">
                 <CardHeader>
                     <CardTitle className={clsx(
                         'text-5xl w-fit mx-auto',
@@ -126,9 +126,9 @@ export default function Hangman({
                             }
                         })}
                     </CardTitle>
-                    <CardDescription className='text-xl py-2'>{listWords[listWords.length - 1].vietnamese_word}</CardDescription>
+                    <CardDescription className='text-xl py-2 text-slate-700 dark:text-slate-300'>{listWords[listWords.length - 1].vietnamese_word}</CardDescription>
                 </CardHeader>
-                <CardContent className='flex justify-center mt-[30svh]'>
+                <CardContent className='flex justify-center mt-[10svh]'>
                     <Keyboard addWord={addWord} />
                 </CardContent>
                 <CardFooter className="flex justify-between">

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
-import { ModeToggle } from "../ui/button-dark-mode";
 import Header from "./components/header";
 
 export const metadata: Metadata = {
@@ -23,11 +22,29 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="mt-5">
-            <Header />
-          </div>
-          <div className="mx-auto text-center p-5 min-h-[90svh] bg-white text-black dark:bg-black dark:text-white transition-colors">
-            {children}
+          <div className="mx-auto text-center min-h-[80svh]  transition-colors">
+            <div className="my-5">
+              <Header />
+            </div>
+            <div className="h-fit">
+              <div className="area bottom-0 bg-[#4e54c8] dark:bg-black">
+                <ul className="circles">
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                </ul>
+              </div>
+              <div className="px-5">
+                {children}
+              </div>
+            </div>
           </div>
         </ThemeProvider>
       </body>

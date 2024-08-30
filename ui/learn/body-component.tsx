@@ -44,11 +44,11 @@ export default function BodyComponent({ listWord, children }: {
         <>
           {children}
           <div className='flex gap-4'>
-            <Button className='bg-black dark:bg-dark-button dark:text-white dark:hover:bg-dark-hover-button dark:border-dark-border-button' onClick={() => startQuizz(typeGame.MatchingGame)}>
-              Start quizz test <SparklesIcon className="ml-1 h-5 w-5 text-gray-50" />
+            <Button onClick={() => startQuizz(typeGame.MatchingGame)}>
+              Start quizz test <SparklesIcon className="ml-1 h-5 w-5 " />
             </Button>
-            <Button className='bg-black dark:bg-dark-button dark:text-white dark:hover:bg-dark-hover-button dark:border-dark-border-button' onClick={() => startQuizz(typeGame.Hangman)}>
-              Hangman <PuzzlePieceIcon className="ml-1 h-5 w-5 text-gray-50" />
+            <Button onClick={() => startQuizz(typeGame.Hangman)}>
+              Hangman <PuzzlePieceIcon className="ml-1 h-5 w-5 " />
             </Button>
           </div>
         </>
@@ -67,7 +67,7 @@ export default function BodyComponent({ listWord, children }: {
           </div>
         ) : isGame === typeGame.Hangman ? (
           <div className=''>
-            <Hangman params={listWord}> 
+            <Hangman params={listWord}>
               {children}
             </Hangman>
           </div>
