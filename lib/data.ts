@@ -4,7 +4,7 @@ import { z } from "zod";
 import { getDb } from "./mongodb";
 import { revalidatePath } from "next/cache";
 import bcrypt from 'bcrypt';
-import { signIn } from "../auth";
+import { signIn, signOut } from "../auth";
 import { AuthError } from "next-auth";
 
 const FormSchema = z.object({
@@ -83,4 +83,7 @@ export async function authenticate(
     }
     throw error;
   }
+}
+export async function SignOut() {
+  await signOut();
 }
