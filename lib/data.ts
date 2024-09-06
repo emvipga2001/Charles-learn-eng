@@ -2,8 +2,6 @@
 
 import { z } from "zod";
 import { getDb } from "./mongodb";
-import { revalidatePath } from "next/cache";
-import bcrypt from 'bcrypt';
 import { signIn, signOut } from "../auth";
 import { AuthError } from "next-auth";
 

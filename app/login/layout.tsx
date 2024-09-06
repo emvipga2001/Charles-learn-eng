@@ -1,12 +1,13 @@
+import React from 'react'
 
 export default function RootLayout({
     children,
-}: Readonly<{
+  }: Readonly<{
     children: React.ReactNode;
-}>) {
-    return (
-        <div>
-            {children}
-        </div>
-    )
+  }>) {
+  return (
+    <div className='min-h-[90svh] flex items-center'>
+        {children}
+    </div>
+  )
 }
