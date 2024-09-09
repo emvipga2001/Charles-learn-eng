@@ -9,25 +9,27 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Switch } from './ui/switch';
 import { useTheme } from 'next-themes';
 import { SignOut } from '../../lib/data';
-import { useCurrentSession } from '@/stores/useCurrentSession';
 import { Session } from 'next-auth';
+import { useSesion } from '@/stores/useSession';
 
 export default function Header({sessionHeader}: {sessionHeader: Session | null}) {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme()
   const [checked, setChecked] = useState<boolean>(true)
   const router = useRouter();
+  const { setUser } = useSesion()
 
   useEffect(() => {
-    if (sessionHeader) {
+    if (sessionHeader && sessionHeader.user) {
+      setUser(sessionHeader.user);
       router.push('/home');
     }
-  }, [sessionHeader, router]);
+  }, [sessionHeader, router, setUser]);
 
   useEffect(() => {
     setChecked(theme == 'dark')
   }, [theme])
-
+  
   return (
     <div className={clsx(
       'flex justify-between px-4',
@@ -56,7 +58,8 @@ export default function Header({sessionHeader}: {sessionHeader: Session | null})
         <div className='content-center'>
           <form
             action={async () => {
-              SignOut()
+              await SignOut()
+              router.push('/login');
             }}
           >
             <button className='whitespace-nowrap'>
