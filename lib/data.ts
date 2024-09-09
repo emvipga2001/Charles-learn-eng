@@ -2,10 +2,9 @@
 
 import { z } from "zod";
 import { getDb } from "./mongodb";
-import { revalidatePath } from "next/cache";
-import bcrypt from 'bcrypt';
 import { signIn, signOut } from "../auth";
 import { AuthError } from "next-auth";
+import { revalidatePath } from "next/cache";
 
 const FormSchema = z.object({
   id: z.number(),
@@ -29,24 +28,25 @@ export async function getListWordLimit(limit: number) {
   return [validatedData, getCountDocuments] as const;
 }
 
-export async function insertWord(eng: string, vn: string, id: number) {
-  // const db = await getDb();
-  // const getDataCollection = await db.collection('db_words').aggregate([
-  //   { $sort: { id: -1 } }
-  // ]).limit(1).toArray();
-  // const validatedData = z.array(FormSchema).parse(getDataCollection);
-  // await db.collection('db_words').insertOne({
-  //   id: validatedData[0].id + 1,
-  //   compare_id: validatedData[0].id + 1,
-  //   english_word: eng,
-  //   vietnamese_word: vn
-  // }).catch(() => {
-  //   return false;
-  // }
-  // ).then(() => {
-  //   revalidatePath('/list-word');
-  //   return true;
-  // });
+export async function insertWord(eng: string, vn: string) {
+  const db = await getDb();
+  const lastDoc = await db.collection('db_words').findOne({}, { sort: { id: -1 } });
+  if (!lastDoc) {
+    return false;
+  }
+  const newId = lastDoc.id + 1;
+  try {
+    await db.collection('db_words').insertOne({
+      id: newId,
+      compare_id: newId,
+      english_word: eng,
+      vietnamese_word: vn
+    });
+    revalidatePath('/list-word');
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export async function editWord(eng: string, vn: string, id: number) {

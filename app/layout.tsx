@@ -2,17 +2,21 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
 import Header from "./components/header";
+import { auth } from "../auth";
 
 export const metadata: Metadata = {
   title: "Learn with Charles",
   description: "Learn english with Charles",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
+  const session = await auth()
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
@@ -22,9 +26,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="mx-auto text-center min-h-[80svh]  transition-colors">
+          <div className="mx-auto text-center min-h-[97svh] transition-colors">
             <div className="my-5">
-              <Header />
+                <Header sessionHeader={session}/>
             </div>
             <div className="h-fit">
               <div className="area bottom-0 bg-[#4e54c8] dark:bg-black">

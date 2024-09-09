@@ -31,8 +31,7 @@ export const useWordStore = create<limitWord>()((set, get) => ({
     },
     addWord: async (eng: string, vn: string) => {
         set({ loading: true, error: false });
-        const id = get().count + 1;
-        await insertWord(eng, vn, id)
+        await insertWord(eng, vn)
     },
     editWord: async (eng: string, vn: string, id: number) => {
         await editWord(eng, vn, id)
