@@ -29,9 +29,9 @@ export default function AddWord() {
         addWord(values.english_word, values.vietnamese_word)
     }
     return (
-        <Card className='dark:bg-black dark:border-dark-border-button'>
+        <Card className='bg-transparent dark:border-dark-border-button'>
             <CardHeader>
-                <CardTitle>Add new word</CardTitle>
+                <CardTitle className='text-white'>Add new word</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
                 <Form {...form}>
@@ -41,7 +41,7 @@ export default function AddWord() {
                             name="english_word"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>English Word</FormLabel>
+                                    <FormLabel className='text-white'>English Word</FormLabel>
                                     <FormControl>
                                         <Input placeholder="English Text" {...field} className='dark:bg-black dark:border-dark-border-button'/>
                                     </FormControl>
@@ -53,14 +53,14 @@ export default function AddWord() {
                             name="vietnamese_word"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>VietNam Word</FormLabel>
+                                    <FormLabel className='text-white'>VietNam Word</FormLabel>
                                     <FormControl>
                                         <Input placeholder="VietNam Text" {...field} className='dark:bg-black dark:border-dark-border-button'/>
                                     </FormControl>
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">Submit</Button>
+                        <Button type="submit" className='bg-white text-black'>Submit</Button>
                     </form>
                 </Form>
             </CardContent>
