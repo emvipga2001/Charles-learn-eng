@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
 import Header from "./components/header";
 import { auth } from "../auth";
+import Background from "./components/background";
 
 export const metadata: Metadata = {
   title: "Learn with Charles",
@@ -14,7 +15,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
+
   const session = await auth()
 
   return (
@@ -26,26 +27,11 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="mx-auto text-center min-h-[97svh] transition-colors">
-            <div className="my-5">
-                <Header sessionHeader={session}/>
-            </div>
+          <div className="mx-auto text-center min-h-svh transition-colors">
+            <Header sessionHeader={session} />
             <div className="h-fit">
-              <div className="area bottom-0 bg-[#4e54c8] dark:bg-black">
-                <ul className="circles">
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                  <li></li>
-                </ul>
-              </div>
-              <div className="px-5">
+              <Background />
+              <div className="px-4">
                 {children}
               </div>
             </div>

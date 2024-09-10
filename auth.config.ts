@@ -9,6 +9,7 @@ export const authConfig = {
         authorized({ auth, request: { nextUrl } }) {
             const isLoggedIn = !!auth?.user;
             const isOnLoginPage = nextUrl.pathname === '/login';
+            
             if (isLoggedIn && isOnLoginPage) {
                 // Nếu đã đăng nhập và đang ở trang login, chuyển hướng tới trang chủ
                 return Response.redirect(new URL('/home', nextUrl));

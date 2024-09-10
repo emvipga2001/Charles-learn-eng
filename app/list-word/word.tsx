@@ -21,13 +21,12 @@ function Word({ props }: { props: word }) {
 
     const handleSaveChanges = (id: number) => {
         editWord(currentEnglishWord, currentVietnameseWord, props.id)
-        console.log('Updated word:', currentEnglishWord, currentVietnameseWord)
     }
 
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <span className="font-semibold select-none h-full w-full">{props.english_word}</span>
+                <span className="font-semibold select-none h-full w-full text-white">{props.english_word}</span>
             </SheetTrigger>
             <SheetContent side="bottom">
                 <SheetHeader>
