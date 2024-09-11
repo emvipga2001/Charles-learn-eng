@@ -7,6 +7,7 @@ type limitWord = {
     limit: number
     loading: boolean
     loadingMore: boolean
+    loadingInsert: boolean
     error: boolean
     count: number
     init: () => Promise<void>
@@ -20,6 +21,7 @@ export const useWordStore = create<limitWord>()((set, get) => ({
     limit: 50,
     loading: false,
     loadingMore: false,
+    loadingInsert: false,
     error: false,
     count: 0,
     init: async () => {
@@ -43,8 +45,9 @@ export const useWordStore = create<limitWord>()((set, get) => ({
         }
     },
     addWord: async (eng: string, vn: string) => {
-        set({ loading: true, error: false });
+        set({ loadingInsert: true });
         await insertWord(eng, vn)
+        set({ loadingInsert: false });
     },
     editWord: async (eng: string, vn: string, id: number) => {
         await editWord(eng, vn, id)

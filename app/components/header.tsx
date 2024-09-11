@@ -1,16 +1,13 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Link from "next/link";
 import Logo from "../../public/Logo.png"
 import Image from 'next/image';
 import clsx from 'clsx';
 import { usePathname, useRouter } from 'next/navigation';
-import { Switch } from './ui/switch';
 import { useTheme } from 'next-themes';
 import { SignOut } from '../../lib/data';
-import { Session } from 'next-auth';
-import { useSesion } from '@/stores/useSession';
 import { ArrowLeftEndOnRectangleIcon } from '@heroicons/react/20/solid';
 import { Moon, Sun } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -21,27 +18,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-export default function Header({ sessionHeader }: { sessionHeader: Session | null }) {
+export default function Header() {
   const pathname = usePathname();
-  const { theme, setTheme } = useTheme()
-  const [checked, setChecked] = useState<boolean>(true)
   const router = useRouter();
-  const { setUser } = useSesion()
-
-  useEffect(() => {
-    if (sessionHeader && sessionHeader.user) {
-      setUser(sessionHeader.user);
-    }
-  }, [sessionHeader, router, setUser]);
-
-  useEffect(() => {
-    setChecked(theme == 'dark')
-  }, [theme])
-
   return (
     <div className={clsx(
       'flex justify-around px-4 py-5',
-      sessionHeader == null && 'hidden'
     )}>
       <div className='content-center'>
         <Image src={Logo} alt={'Logo'} width={90} priority={true} />

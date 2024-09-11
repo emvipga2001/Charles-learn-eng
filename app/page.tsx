@@ -1,6 +1,5 @@
-import { Suspense } from "react";
-import Header from "./components/header";
 
+// Dùng làm trang pagelanding
 export default async function Page() {
   return (
     <div className="mx-auto text-center p-5 text-black transition-colors">

@@ -8,13 +8,14 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import Loading from '@/loading'
 
 const formSchema = z.object({
     english_word: z.string(),
     vietnamese_word: z.string()
 })
 export default function AddWord() {
-    const { addWord } = useWordStore()
+    const { addWord, loadingInsert } = useWordStore()
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -34,7 +35,7 @@ export default function AddWord() {
                 <CardTitle className='text-white'>Add new word</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-                <Form {...form}>
+                {loadingInsert ? <Loading /> : <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <FormField
                             control={form.control}
@@ -43,7 +44,7 @@ export default function AddWord() {
                                 <FormItem>
                                     <FormLabel className='text-white'>English Word</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="English Text" {...field} className='dark:bg-black dark:border-dark-border-button'/>
+                                        <Input placeholder="English Text" {...field} className='dark:bg-black dark:border-dark-border-button' />
                                     </FormControl>
                                 </FormItem>
                             )}
@@ -55,7 +56,7 @@ export default function AddWord() {
                                 <FormItem>
                                     <FormLabel className='text-white'>VietNam Word</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="VietNam Text" {...field} className='dark:bg-black dark:border-dark-border-button'/>
+                                        <Input placeholder="VietNam Text" {...field} className='dark:bg-black dark:border-dark-border-button' />
                                     </FormControl>
                                 </FormItem>
                             )}
@@ -63,6 +64,7 @@ export default function AddWord() {
                         <Button type="submit" className='bg-white text-black'>Submit</Button>
                     </form>
                 </Form>
+                }
             </CardContent>
         </Card>
     )

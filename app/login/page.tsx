@@ -8,12 +8,24 @@ import {
 import { useFormState, useFormStatus } from 'react-dom';
 import { Button } from '@/components/ui/button';
 import { authenticate } from '../../lib/data';
+import Loading from '@/loading';
 
 export default function Page() {
   const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+
   return (
     <form action={dispatch} className="text-white w-full">
-      <div className="rounded-lg lg:px-[300px] md:px-[200px] text-left">
+      <LoginForm errorMessage={errorMessage} />
+    </form>
+  );
+}
+
+function LoginForm({ errorMessage }: { errorMessage: string | undefined }) {
+  const { pending } = useFormStatus();
+
+  return (
+    <div className="rounded-lg lg:px-[300px] md:px-[200px] text-left">
+      {pending ? <Loading /> : <>
         <h1 className={`mb-3 text-2xl text-center`}>
           Please log in to continue.
         </h1>
@@ -58,7 +70,9 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <LoginButton />
+        <Button className="mt-4 w-full bg-white text-black hover:bg-slate-200" aria-disabled={pending}>
+          Log in
+        </Button>
         <div
           className="flex h-8 items-end space-x-1"
           aria-live="polite"
@@ -71,16 +85,7 @@ export default function Page() {
             </>
           )}
         </div>
-      </div>
-    </form>
-  );
-}
-
-function LoginButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button className="mt-4 w-full bg-white text-black hover:bg-slate-200" aria-disabled={pending}>
-      Log in
-    </Button>
+      </>}
+    </div>
   );
 }

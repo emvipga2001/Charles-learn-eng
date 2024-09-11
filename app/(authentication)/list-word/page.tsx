@@ -1,7 +1,6 @@
 'use client'
 
 import { Suspense, useEffect, useState } from 'react';
-import Loading from '@/loading';
 import Render from './render';
 import { useWordStore } from '@/stores/useListWord';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
@@ -18,6 +17,7 @@ export default function Page() {
   const [content, setContet] = useState<string>(listConten.LIST_WORD);
   useEffect(() => {
     if (words.length == 0) {
+      console.log('Loading');
       init();
     }
   }, [words, init])
