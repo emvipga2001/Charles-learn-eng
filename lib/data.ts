@@ -29,24 +29,23 @@ export async function getListWordLimit(limit: number) {
 }
 
 export async function insertWord(eng: string, vn: string) {
-  // const db = await getDb();
-  // const lastDoc = await db.collection('db_words').findOne({}, { sort: { id: -1 } });
-  // if (!lastDoc) {
-  //   return false;
-  // }
-  // const newId = lastDoc.id + 1;
-  // try {
-  //   await db.collection('db_words').insertOne({
-  //     id: newId,
-  //     compare_id: newId,
-  //     english_word: eng,
-  //     vietnamese_word: vn
-  //   });
-  await new Promise(r => setTimeout(r, 2000));
-  return true;
-  // } catch (error) {
-  //   return false;
-  // }
+  const db = await getDb();
+  const lastDoc = await db.collection('db_words').findOne({}, { sort: { id: -1 } });
+  if (!lastDoc) {
+    return false;
+  }
+  const newId = lastDoc.id + 1;
+  try {
+    await db.collection('db_words').insertOne({
+      id: newId,
+      compare_id: newId,
+      english_word: eng,
+      vietnamese_word: vn
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export async function editWord(eng: string, vn: string, id: number) {
