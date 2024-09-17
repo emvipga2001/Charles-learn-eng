@@ -42,7 +42,6 @@ export async function insertWord(eng: string, vn: string) {
       english_word: eng,
       vietnamese_word: vn
     });
-    revalidatePath('/list-word');
     return true;
   } catch (error) {
     return false;
@@ -71,6 +70,7 @@ export async function authenticate(
   formData: FormData,
 ) {
   try {
+    // await new Promise(r => setTimeout(r, 2000));
     await signIn('credentials', formData);
   } catch (error) {
     if (error instanceof AuthError) {

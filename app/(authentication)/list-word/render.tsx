@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import { FormattedListWord } from '../../lib/definitions'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
 import { Button } from '@/components/ui/button'
 import { useWordStore } from '@/stores/useListWord'
@@ -9,9 +8,11 @@ import clsx from 'clsx'
 import Word from './word'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import Loading from '@/loading'
+import { FormattedListWord } from '../../../lib/definitions'
 
 export default function Render({ listWord }: { listWord: FormattedListWord[] }) {
     const { addMore, count, words, loading, loadingMore } = useWordStore()
+    
     return (
         <div className='py-5'>
             <div className='rounded-md border border-white h-[70svh]'>

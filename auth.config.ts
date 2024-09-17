@@ -1,5 +1,4 @@
 import type { NextAuthConfig } from 'next-auth';
-import { useRouter } from 'next/router'
 
 export const authConfig = {
     pages: {

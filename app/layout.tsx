@@ -16,8 +16,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const session = await auth()
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
@@ -28,7 +26,6 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <div className="mx-auto text-center min-h-svh transition-colors">
-            <Header sessionHeader={session} />
             <div className="h-fit">
               <Background />
               <div className="px-4">
