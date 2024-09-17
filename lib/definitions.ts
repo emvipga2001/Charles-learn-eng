@@ -16,3 +16,10 @@ export type User = {
   email: string;
   password: string;
 };
+
+export const FormSchema = z.object({
+  id: z.number(),
+  compare_id: z.number(),
+  english_word: z.string(),
+  vietnamese_word: z.string()
+});
