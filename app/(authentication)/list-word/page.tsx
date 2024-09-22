@@ -17,7 +17,6 @@ export default function Page() {
   const [content, setContet] = useState<string>(listConten.LIST_WORD);
   useEffect(() => {
     if (words.length == 0) {
-      console.log('Loading');
       init();
     }
   }, [words, init])
