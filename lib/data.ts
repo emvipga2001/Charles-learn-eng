@@ -4,7 +4,7 @@ import { z } from "zod";
 import { getDb } from "./mongodb";
 import { signIn, signOut } from "../auth";
 import { AuthError } from "next-auth";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 const FormSchema = z.object({
   id: z.number(),
@@ -57,6 +57,18 @@ export async function editWord(eng: string, vn: string, id: number) {
       english_word: eng,
       vietnamese_word: vn
     }
+  }).catch(() => {
+    return false;
+  }
+  ).then(() => {
+    return true;
+  });
+}
+
+export async function deleteWord(id: number) {
+  const db = await getDb();
+  await db.collection('db_words').deleteOne({
+    id: id
   }).catch(() => {
     return false;
   }

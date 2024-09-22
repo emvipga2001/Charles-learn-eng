@@ -6,10 +6,10 @@ import BodyComponent from "../../../ui/learn/body-component";
 export default async function Page() {
   const listWord = await getListWord();
   return (
-    <div>
+    <>
       <BodyComponent listWord={listWord}>
         <HeaderComponent content='Learn English' />
       </BodyComponent>
-    </div>
+    </>
   );
 }
