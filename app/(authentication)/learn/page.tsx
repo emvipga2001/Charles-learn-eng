@@ -1,6 +1,6 @@
 import { getListWord } from "../../../lib/data";
 import HeaderComponent from "../../../ui/header-component";
-import BodyComponent from "../../../ui/learn/body-component";
+import BodyComponent from "./body-component";
 
 
 export default async function Page() {

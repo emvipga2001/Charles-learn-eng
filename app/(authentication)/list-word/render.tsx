@@ -26,13 +26,13 @@ export default function Render({ listWord }: { listWord: FormattedListWord[] }) 
                                     direction="horizontal"
                                     className="min-h-full max-w-full border bg-transparent dark:border-dark-border-button"
                                 >
-                                    <ResizablePanel defaultSize={100}>
+                                    <ResizablePanel defaultSize={50}>
                                         <div className="flex h-full items-center justify-center p-6 whitespace-nowrap">
                                             <Word props={word} />
                                         </div>
                                     </ResizablePanel>
                                     <ResizableHandle withHandle />
-                                    <ResizablePanel defaultSize={0}>
+                                    <ResizablePanel defaultSize={50}>
                                         <div className="flex h-full items-center justify-center p-6 whitespace-nowrap">
                                             <span className="font-semibold select-none text-white">{word.vietnamese_word}</span>
                                         </div>
