@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useWordStore } from '@/stores/useListWord'
 
-
 type word = {
     id: number,
     english_word: string,
