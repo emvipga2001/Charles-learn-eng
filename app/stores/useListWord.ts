@@ -15,6 +15,7 @@ type limitWord = {
     addWord: (eng: string, vn: string) => Promise<void>
     editWord: (eng: string, vn: string, id: number) => Promise<void>
     deleteWord: (id: number) => Promise<void>
+    setWords: (listWords: FormattedListWord[]) => Promise<void>
 }
 
 export const useWordStore = create<limitWord>()((set, get) => ({
@@ -61,5 +62,8 @@ export const useWordStore = create<limitWord>()((set, get) => ({
         await deleteWord(id)
         const [listWord, _] = await getListWordLimit(limit)
         set({ words: listWord });
-    }
+    },
+    setWords: async (listWords: FormattedListWord[]) => {
+        set({ words: listWords });
+    },
 }))

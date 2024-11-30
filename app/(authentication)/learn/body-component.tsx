@@ -66,7 +66,7 @@ export default function BodyComponent({
           {children}
           <div className="flex gap-4">
             { games.map((game) => (
-              <Card>
+              <Card key={game.id}>
                 <CardHeader>
                   <CardTitle>{game.label}</CardTitle>
                 </CardHeader>

@@ -8,13 +8,14 @@ export const authConfig = {
         authorized({ auth, request: { nextUrl } }) {
             const isLoggedIn = !!auth?.user;
             const isOnLoginPage = nextUrl.pathname === '/login';
+            const isOnLanding = nextUrl.pathname === '/';
             
-            if (isLoggedIn && isOnLoginPage) {
+            if (isLoggedIn && isOnLoginPage && !isOnLanding) {
                 // Nếu đã đăng nhập và đang ở trang login, chuyển hướng tới trang chủ
                 return Response.redirect(new URL('/home', nextUrl));
             }
 
-            if (!isLoggedIn && !isOnLoginPage) {
+            if (!isLoggedIn && !isOnLoginPage && !isOnLanding) {
                 // Nếu chưa đăng nhập và không ở trang login, chuyển hướng tới trang login
                 return Response.redirect(new URL('/login', nextUrl));
             }
