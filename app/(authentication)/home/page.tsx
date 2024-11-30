@@ -6,11 +6,6 @@ export default function Page() {
   return (
     <>
       <h2>Home Page</h2>
-      <Link href="/">
-        <Button className="mt-4 mx-auto">
-          <ArrowLeftIcon className="ml-auto h-5 w-5" />&nbsp; Back 
-        </Button>
-      </Link>
     </>
   );
 }

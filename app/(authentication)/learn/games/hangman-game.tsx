@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FormattedListWord } from '../../lib/definitions';
+import { FormattedListWord } from '../../../../lib/definitions';
 import { Button } from "@/components/ui/button"
 import {
     Card,

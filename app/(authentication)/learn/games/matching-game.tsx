@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { FormattedListWord } from "../../lib/definitions";
+import { FormattedListWord } from "../../../../lib/definitions";
 import clsx from "clsx";
 import { count } from "console";
-import CongratulationPage from "../congratulation";
+import CongratulationPage from "../../../../ui/congratulation";
 
 export default function MatchingGame({
   params,children
@@ -251,7 +251,7 @@ export default function MatchingGame({
                 key={word.id + "ENG"}
                 onClick={() => {setIsChoiceEng(index);compareWord(Eng, word.compare_id, index, word.id)}}
                 className={clsx(
-                  "whitespace-nowrap flex justify-center items-center overflow-hidden text-autoSizeTextLearn opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 transition-all border w-full rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 focus:text-white hover:bg-blue-500 hover:bg-blue-600 hover:text-white",
+                  "whitespace-nowrap flex justify-center items-center overflow-hidden text-autoSizeTextLearn opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 transition-all border w-full rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 focus:text-white hover:bg-blue-500 hover:text-white",
                   {
                     '!opacity-[1] !pointer-events-auto': !isDisEng[index].isDisable && !isEndEng[index].endDisable,
                     'bg-red-700 focus:bg-red-700': isError.error && isError.indexEng == index,
@@ -275,7 +275,7 @@ export default function MatchingGame({
                 key={word.id + "ENG"}
                 onClick={() => {setIsChoiceVie(index);compareWord(Vie, word.compare_id, index, word.id)}}
                 className={clsx(
-                  "whitespace-nowrap flex justify-center items-center overflow-hidden text-autoSizeTextLearn opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 transition-all w-full border rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 focus:text-white hover:bg-blue-500 hover:bg-blue-600 hover:text-white",
+                  "whitespace-nowrap flex justify-center items-center overflow-hidden text-autoSizeTextLearn opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 transition-all w-full border rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 focus:text-white hover:bg-blue-500 hover:text-white",
                   {
                     '!opacity-[1] !pointer-events-auto': !isDisVie[index].isDisable && !isEndVie[index].endDisable,
                     'bg-red-700 focus:bg-red-700': isError.error && isError.indexVie == index,
