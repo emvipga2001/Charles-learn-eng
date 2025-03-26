@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
-import Header from "./components/header";
-import { auth } from "../auth";
 import Background from "./components/background";
+import { auth } from "../auth";
 
 export const metadata: Metadata = {
   title: "Learn with Charles",
@@ -12,10 +11,12 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
+  header
 }: Readonly<{
   children: React.ReactNode;
+  header: React.ReactNode;
 }>) {
-
+  const session = await auth()
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
@@ -29,6 +30,7 @@ export default async function RootLayout({
             <div className="h-fit">
               <Background />
               <div className="px-4">
+                {session?.user && header}
                 {children}
               </div>
             </div>
