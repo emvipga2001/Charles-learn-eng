@@ -1,4 +1,6 @@
 import Header from "@/components/header";
+import Loading from "@/loading";
+import { Suspense } from "react";
 
 export default async function RootLayout({
     children,
@@ -6,9 +8,11 @@ export default async function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <div>
+        <>
             <Header />
-            {children}
-        </div>
+            <Suspense fallback={<Loading />}>
+                {children}
+            </Suspense>
+        </>
     )
 }

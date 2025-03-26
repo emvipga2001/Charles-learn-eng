@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { FormattedListWord } from '../../lib/definitions'
-import { editWord, getListWordLimit, insertWord } from '../../lib/data'
+import { deleteWord, editWord, getListWordLimit, insertWord } from '../../lib/data'
 
 type limitWord = {
     words: FormattedListWord[]
@@ -14,6 +14,7 @@ type limitWord = {
     addMore: () => Promise<void>
     addWord: (eng: string, vn: string) => Promise<void>
     editWord: (eng: string, vn: string, id: number) => Promise<void>
+    deleteWord: (id: number) => Promise<void>
 }
 
 export const useWordStore = create<limitWord>()((set, get) => ({
@@ -52,6 +53,12 @@ export const useWordStore = create<limitWord>()((set, get) => ({
     editWord: async (eng: string, vn: string, id: number) => {
         await editWord(eng, vn, id)
         const limit = get().limit - 50;
+        const [listWord, _] = await getListWordLimit(limit)
+        set({ words: listWord });
+    },
+    deleteWord: async (id: number) => {
+        const limit = get().limit;
+        await deleteWord(id)
         const [listWord, _] = await getListWordLimit(limit)
         set({ words: listWord });
     }
