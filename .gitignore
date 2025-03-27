@@ -38,3 +38,6 @@ next-env.d.ts
 
 # mongo-playground
 playground.mongodb.js
+
+# docker
+docker-compose.yml

@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import Render from './render';
-import { useWordStore } from '@/stores/useListWord';
+import { useWordStore } from '$root/stores/useListWord';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
 import AddWord from './add-word';
 import clsx from 'clsx';

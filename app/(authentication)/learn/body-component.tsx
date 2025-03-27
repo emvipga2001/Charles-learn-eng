@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { PuzzlePieceIcon, SparklesIcon } from "@heroicons/react/20/solid";
 import MatchingGame from "./games/matching-game";
 import Hangman from "./games/hangman-game";
-import { FormattedListWord } from "../../../lib/definitions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowBigRightIcon } from "lucide-react";
+import { FormattedListWord } from "$root/lib/entities/definitions";
 
 enum typeGame {
   None = 0,

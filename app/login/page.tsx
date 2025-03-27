@@ -7,8 +7,8 @@ import {
 } from '@heroicons/react/24/outline';
 import { useFormState, useFormStatus } from 'react-dom';
 import { Button } from '@/components/ui/button';
-import { authenticate } from '../../lib/data';
 import Loading from '@/loading';
+import { authenticate } from '$root/lib/usecases/auth.usecase';
 
 export default function Page() {
   const [errorMessage, dispatch] = useFormState(authenticate, undefined);

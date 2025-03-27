@@ -1,6 +1,6 @@
 import { create } from 'zustand'
-import { FormattedListWord } from '../../lib/definitions'
-import { deleteWord, editWord, getListWordLimit, insertWord } from '../../lib/data'
+import { deleteWord, editWord, getListWordLimit, insertWord } from '$root/lib/usecases/word.usecase'
+import { FormattedListWord } from '$root/lib/entities/definitions'
 
 type limitWord = {
     words: FormattedListWord[]

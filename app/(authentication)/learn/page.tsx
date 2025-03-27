@@ -1,5 +1,5 @@
-import { getListWordRandom } from "../../../lib/data";
-import HeaderComponent from "../../../ui/header-component";
+import { getListWordRandom } from "$root/lib/usecases/word.usecase";
+import HeaderComponent from "@/components/ui/header-component";
 import BodyComponent from "./body-component";
 
 
