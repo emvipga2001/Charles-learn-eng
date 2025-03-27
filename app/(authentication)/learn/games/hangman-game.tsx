@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { FormattedListWord } from '../../../../lib/definitions';
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -11,6 +10,7 @@ import {
 } from "@/components/ui/card"
 import Keyboard from '@/components/key-board';
 import clsx from 'clsx';
+import { FormattedListWord } from '$root/lib/entities/definitions';
 
 export default function Hangman({
     params, children

@@ -5,7 +5,7 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHe
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { useWordStore } from '@/stores/useListWord'
+import { useWordStore } from '$root/stores/useListWord'
 
 
 type word = {

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { FormattedListWord } from "../../../../lib/definitions";
 import clsx from "clsx";
-import { count } from "console";
-import CongratulationPage from "../../../../ui/congratulation";
+import { FormattedListWord } from "$root/lib/entities/definitions";
+import CongratulationPage from "@/components/ui/congratulation";
 
 export default function MatchingGame({
   params,children
