@@ -7,12 +7,12 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { Button } from "@/components/ui/button";
-import { useWordStore } from "@/stores/useListWord";
+import { useWordStore } from "$root/stores/useListWord";
 import clsx from "clsx";
 import Word from "./word";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Loading from "@/loading";
-import { FormattedListWord } from "../../../lib/definitions";
+import { FormattedListWord } from "$root/lib/entities/definitions";
 
 export default function Render({
   listWord,

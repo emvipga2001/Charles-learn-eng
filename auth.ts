@@ -3,40 +3,72 @@ import Credentials from 'next-auth/providers/credentials';
 import { authConfig } from './auth.config';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
-import { getDb } from './lib/mongodb';
-import { User } from './lib/definitions';
+import { getUserByEmail } from './lib/usecases/auth.usecase';
 
-async function getUser(email: string): Promise<User | undefined> {
-    try {
-        const db = await getDb();
-        const user = await db.collection('db_users').findOne({ email: email }) as User | null;
-        return user || undefined;
-    } catch (error) {
-        console.error('Failed to fetch user:', error);
-        throw new Error('Failed to fetch user.');
-    }
-}
-
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const {
+    handlers: { GET, POST },
+    auth,
+    signIn,
+    signOut,
+} = NextAuth({
     ...authConfig,
     providers: [
         Credentials({
             async authorize(credentials) {
                 const parsedCredentials = z
-                    .object({ email: z.string().email(), password: z.string() })
+                    .object({
+                        email: z.string().email(),
+                        password: z.string().min(6),
+                    })
                     .safeParse(credentials);
 
-                if (parsedCredentials.success) {
-                    const { email, password } = parsedCredentials.data;
-                    const user = await getUser(email);
-                    if (!user) return null;
-                    const passwordsMatch = await bcrypt.compare(password, user.password);
-
-                    if (passwordsMatch) return user;
+                if (!parsedCredentials.success) {
+                    return null;
                 }
 
-                return null;
+                const { email, password } = parsedCredentials.data;
+                const user = await getUserByEmail(email);
+
+                if (!user || !user.password) {
+                    return null;
+                }
+
+                const passwordsMatch = await bcrypt.compare(password, user.password);
+
+                if (!passwordsMatch) {
+                    return null;
+                }
+
+                return {
+                    id: user.id,
+                    email: user.email,
+                    name: user.name,
+                    password: user.password,
+                };
             },
         }),
     ],
+    callbacks: {
+        async jwt({ token, user }) {
+            if (user) {
+                token.id = user.id;
+                token.email = user.email;
+                token.name = user.name;
+            }
+            return token;
+        },
+        async session({ session, token }) {
+            if (token && session.user) {
+                session.user.id = token.id as string;
+                session.user.email = token.email as string;
+                session.user.name = token.name as string;
+            }
+            return session;
+        },
+    },
+    session: {
+        strategy: 'jwt',
+        maxAge: 30, // 30 days
+    },
+    secret: process.env.NEXTAUTH_SECRET,
 });

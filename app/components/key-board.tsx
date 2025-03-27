@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import clsx from 'clsx';
 
 const Keyboard = ({ addWord }: { addWord: (char: string) => void }) => {
     const letters = 'QWERTYUIOPASDFGHJKLZXCVBNM'.split('');

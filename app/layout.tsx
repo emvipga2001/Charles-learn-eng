@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider"
+import { auth } from "$root/auth";
+import { ThemeProvider } from "./components/theme-provider";
 import Background from "./components/background";
-import { auth } from "../auth";
 
 export const metadata: Metadata = {
   title: "Learn with Charles",

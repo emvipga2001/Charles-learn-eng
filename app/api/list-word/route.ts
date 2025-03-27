@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { getDb } from "../../../lib/mongodb";
-import { FormSchema } from "../../../lib/definitions";
 import { NextRequest } from "next/server";
+import { getDb } from "$root/lib/adapters/mongodb";
+import { FormSchema } from "$root/lib/entities/definitions";
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
