@@ -13,7 +13,9 @@ export default function CongratulationPage() {
             src={fireworksImg}
             alt="Fireworks"
             className="w-full"
-            height={100} width={100}
+            height={100}
+            width={100}
+            unoptimized
           />
         </div>
       </div>

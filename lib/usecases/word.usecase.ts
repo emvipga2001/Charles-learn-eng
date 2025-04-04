@@ -2,13 +2,11 @@
 
 import { z } from "zod";
 import { getDb } from "$root/lib/adapters/mongodb";
-
-const FormSchema = z.object({
-  id: z.number(),
-  compare_id: z.number(),
-  english_word: z.string(),
-  vietnamese_word: z.string()
-});
+import { FormSchema } from "../entities/definitions";
+import { API_ENDPOINTS } from "../constant/api";
+import { getAuthToken } from "./auth.usecase";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function getListWordRandom() {
   const db = await getDb();
@@ -72,4 +70,32 @@ export async function deleteWord(id: number) {
   ).then(() => {
     return true;
   });
+}
+
+export async function getAllWords() {
+  try {
+    const token = await getAuthToken();
+    
+    const data = await fetch(API_ENDPOINTS.GET_ALL_WORDS, {
+      method: "GET",
+      headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+      },
+      next: { tags: ['list-word-api'] }
+    });
+
+    if (!data.ok) throw new Error("Failed to fetch words");
+    const { words } : { words: z.infer<typeof FormSchema>[] } = await data.json();
+    return words;
+  } catch (error) {
+    console.error("Error fetching all words:", error);
+    throw error;
+  }
+}
+
+export async function reloadGetAllWords() {
+  revalidateTag('list-word-api');
+  revalidatePath('/list-word');
+  redirect('/list-word');
 }

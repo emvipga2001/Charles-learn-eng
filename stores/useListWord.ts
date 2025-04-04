@@ -1,8 +1,8 @@
 import { create } from 'zustand'
-import { deleteWord, editWord, getListWordLimit, insertWord } from '$root/lib/usecases/word.usecase'
+import { deleteWord, editWord, getAllWords, getListWordLimit, insertWord, reloadGetAllWords } from '$root/lib/usecases/word.usecase'
 import { FormattedListWord } from '$root/lib/entities/definitions'
 
-type limitWord = {
+type listWordStates = {
     words: FormattedListWord[]
     limit: number
     loading: boolean
@@ -10,15 +10,24 @@ type limitWord = {
     loadingInsert: boolean
     error: boolean
     count: number
+    isEnd: boolean
+    isReload: boolean
+}
+
+type listWordActions = {
     init: () => Promise<void>
     addMore: () => Promise<void>
     addWord: (eng: string, vn: string) => Promise<void>
     editWord: (eng: string, vn: string, id: number) => Promise<void>
     deleteWord: (id: number) => Promise<void>
     setWords: (listWords: FormattedListWord[]) => Promise<void>
+    getAll: () => Promise<void>
+    reloadGetAll: () => Promise<void>
 }
 
-export const useWordStore = create<limitWord>()((set, get) => ({
+type ListWord = listWordStates & listWordActions
+
+const defaultInitState: listWordStates = {
     words: [],
     limit: 50,
     loading: false,
@@ -26,6 +35,12 @@ export const useWordStore = create<limitWord>()((set, get) => ({
     loadingInsert: false,
     error: false,
     count: 0,
+    isEnd: false,
+    isReload: false
+}
+
+export const useWordStore = create<ListWord>()((set, get) => ({
+    ...defaultInitState,
     init: async () => {
         set({ loading: true, error: false });
         try {
@@ -53,17 +68,27 @@ export const useWordStore = create<limitWord>()((set, get) => ({
     },
     editWord: async (eng: string, vn: string, id: number) => {
         await editWord(eng, vn, id)
-        const limit = get().limit - 50;
-        const [listWord, _] = await getListWordLimit(limit)
-        set({ words: listWord });
+        await get().reloadGetAll();
     },
     deleteWord: async (id: number) => {
-        const limit = get().limit;
         await deleteWord(id)
-        const [listWord, _] = await getListWordLimit(limit)
-        set({ words: listWord });
+        await get().reloadGetAll();
     },
     setWords: async (listWords: FormattedListWord[]) => {
         set({ words: listWords });
+    },
+    getAll: async () => {
+        set({ loading: true, error: false });
+        try {
+            const listWord = await getAllWords()
+            set({ loading: false, words: listWord, isReload: true});
+        } catch (error) {
+            set({ loading: false, error: true });
+        }
+    },
+    reloadGetAll: async () => {
+        set({ isReload: false });
+        await reloadGetAllWords();
+        await get().getAll();
     },
 }))

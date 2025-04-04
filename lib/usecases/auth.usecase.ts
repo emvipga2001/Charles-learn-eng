@@ -3,6 +3,7 @@
 import { signIn, signOut } from '$root/auth';
 import { getDb } from '$root/lib/adapters/mongodb';
 import { AuthError, User } from 'next-auth';
+import { cookies } from "next/headers";
 
 export async function getUserByEmail(email: string): Promise<User | null> {
     try {
@@ -47,4 +48,16 @@ export async function authenticate(
 
 export async function SignOut() {
   await signOut();
+}
+
+
+export async function getAuthToken() {
+  const cookieStore = cookies();
+  const token = cookieStore.get("authjs.session-token")?.value;
+
+  if (!token) {
+    throw new Error("Token not found in cookies");
+  }
+
+  return token;
 }

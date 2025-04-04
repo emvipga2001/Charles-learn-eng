@@ -15,7 +15,7 @@ type word = {
 }
 
 function Word({ props }: { props: word }) {
-    const { editWord, deleteWord } = useWordStore()
+    const { editWord, deleteWord, reloadGetAll } = useWordStore()
     const [currentEnglishWord, setCurrentEnglishWord] = useState(props.english_word)
     const [currentVietnameseWord, setCurrentVietnameseWord] = useState(props.vietnamese_word)
 
@@ -62,7 +62,7 @@ function Word({ props }: { props: word }) {
                 <SheetFooter>
                     <SheetClose asChild>
                         <>
-                            <Button type="button" className='text-red-500' onClick={() => deleteWord(props.id)}>Delete word</Button>
+                            <Button type="button" className='text-red-500' onClick={() => {deleteWord(props.id); reloadGetAll()}}>Delete word</Button>
                             <Button type="submit" onClick={() => handleSaveChanges()}>Save changes</Button>
                         </>
                     </SheetClose>
