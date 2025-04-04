@@ -1,4 +1,7 @@
 import { MongoClient } from 'mongodb';
+import { FormSchema } from '../entities/definitions';
+import { z } from 'zod';
+import { unstable_noStore } from 'next/cache';
 
 const uri: string = process.env.MONGODB_URI || "";
 if (!uri) {
@@ -24,4 +27,13 @@ if (process.env.NODE_ENV === 'development') {
 export async function getDb() {
   const client = await clientPromise;
   return client.db(process.env.MONGODB_DB);
+}
+
+export async function getAllWordDB() {
+  unstable_noStore();
+  const db = await getDb();
+  const getDataCollection = await db.collection('db_words').find().toArray();
+  const validatedData = z.array(FormSchema).parse(getDataCollection);
+  const getCountDocuments = await db.collection('db_words').countDocuments();
+  return [validatedData, getCountDocuments] as const;
 }

@@ -20,7 +20,7 @@ export default function MatchingGame({
   const [idCompareVie, setIdCompareVie] = useState(0);
   const [countCorrect, setCountCorrect] = useState(0);
   const [isShuffled, setIsShuffled] = useState(true);
-  const [isEndEng, setIsEndEng] = useState([
+  const [engEndState, setEngEndState] = useState([
     { endDisable: false },
     { endDisable: false },
     { endDisable: false },
@@ -28,7 +28,7 @@ export default function MatchingGame({
     { endDisable: false },
     { endDisable: false }
   ]);
-  const [isEndVie, setIsEndVie] = useState([
+  const [vieEndState, setVieEndState] = useState([
     { endDisable: false },
     { endDisable: false },
     { endDisable: false },
@@ -36,20 +36,21 @@ export default function MatchingGame({
     { endDisable: false },
     { endDisable: false }
   ]);
-  const [isDisEng, setIsDisEng] = useState([
+  const [engDisableState, setEngDisableState] = useState([
     { isDisable: false },
     { isDisable: false },
     { isDisable: false },
     { isDisable: false },
     { isDisable: false }
   ]);
-  const [isDisVie, setIsDisVie] = useState([
+  const [vieDisableState, setVieDisableState] = useState([
     { isDisable: false },
     { isDisable: false },
     { isDisable: false },
     { isDisable: false },
     { isDisable: false }
   ]);
+
   const [maxlengthWord, setMaxlengthWord] = useState(0);
   const [taskBarColor, setTaskBarColor] = useState(0);
   const [isChoiceEng, setIsChoiceEng] = useState(-1);
@@ -62,7 +63,7 @@ export default function MatchingGame({
     const finishList = handleShuffledList(listWords);
     setListWords(finishList);
     setShuffledWord(handleShuffledList(finishList.slice(0, 5)));
-    setMaxlengthWord(100 / finishList.length)
+    setMaxlengthWord(100 / finishList.length);
   }, []);
 
   useEffect(() => {
@@ -82,9 +83,9 @@ export default function MatchingGame({
         if (!isShuffled) {
           setIsChoice({ choice: false, indexEng: -1, indexVie: -1 });
         }
-      }, 3500)
+      }, 3500);
     }
-  }, [countCorrect]);
+  }, [countCorrect, isShuffled]);
 
   useEffect(() => {
     if (isHandleChoice == 10) {
@@ -105,26 +106,13 @@ export default function MatchingGame({
     return shuffledList;
   }
 
-  // function duplicateList(listWord: FormattedListWord[]) {
-  //   const shuffledList = [...listWord];
-  //   for (let i = 0; i < (shuffledList.length % 2); i++) {
-  //     const j = Math.floor(Math.random() * shuffledList.length);
-  //     const newElement: FormattedListWord ={
-  //       ...shuffledList[j],
-  //       id: shuffledList[shuffledList.length - 1].id + 1,
-  //     }
-  //     shuffledList.push(newElement);
-  //   }
-  //   return shuffledList;
-  // }
-
   function hanldeDisable(indexEng: number, indexVie: number, isDisable: boolean) {
-    setIsDisEng(preVal => {
+    setEngDisableState(preVal => {
       const updateData = [...preVal];
       updateData[indexEng] = { isDisable: isDisable }
       return updateData;
     });
-    setIsDisVie(preVal => {
+    setVieDisableState(preVal => {
       const updateData = [...preVal];
       updateData[indexVie] = { isDisable: isDisable }
       return updateData;
@@ -149,80 +137,106 @@ export default function MatchingGame({
    * 
    */
   async function compareWord(type: number, compare_id: number, index: number, id: number) {
-    var handleChoice = isHandleChoice;
-    var checkIdCompareEng = idCompareEng;
-    var checkIdCompareVie = idCompareVie;
-    var checkIndexEng = indexEng;
-    var checkIndexVie = indexVie;
-    var countChoice = countCorrect;
+    let updatedHandleChoice = isHandleChoice;
+    let updatedIdCompareEng = idCompareEng;
+    let updatedIdCompareVie = idCompareVie;
+    let updatedIndexEng = indexEng;
+    let updatedIndexVie = indexVie;
+    let updatedCountCorrect = countCorrect;
 
     if (type === Eng) {
       setIdCompareEng(compare_id);
       setIndexEng(index);
-      checkIdCompareEng = compare_id;
-      handleChoice = handleChoice + 1;
-      checkIndexEng = index;
+      updatedIdCompareEng = compare_id;
+      updatedHandleChoice += 1;
+      updatedIndexEng = index;
     } else {
       setIdCompareVie(compare_id);
       setIndexVie(index);
-      checkIdCompareVie = compare_id;
-      handleChoice = handleChoice + 9;
-      checkIndexVie = index;
+      updatedIdCompareVie = compare_id;
+      updatedHandleChoice += 9;
+      updatedIndexVie = index;
     }
-    setIsHandleChoice(handleChoice);
+    setIsHandleChoice(updatedHandleChoice);
 
-    if (handleChoice === 10) {
-      if (checkIdCompareEng === checkIdCompareVie) {
-        setIsError({ error: false, indexEng: -1, indexVie: -1 })
-        const shuffledList = [...listWords];
-        const shuffledWordList = [...shuffledWord];
-        setIsChoice({ choice: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
-        setCountCorrect(++countChoice);
-        hanldeDisable(isChoice.indexEng, isChoice.indexVie, false);
-        setTaskBarColor(prev => prev += maxlengthWord)
-        if (shuffledList.length <= 5) {
-          setIsEndEng(preVal => {
-            const updateData = preVal;
-            updateData[checkIndexEng].endDisable = true;
-            return updateData;
-          });
-          setIsEndVie(preVal => {
-            const updateData = preVal;
-            updateData[checkIndexVie].endDisable = true;
-            return updateData;
-          });
-          return;
-        }
-        [shuffledList[checkIndexEng], shuffledList[shuffledList.length - 1]] = [shuffledList[shuffledList.length - 1], shuffledList[checkIndexEng]];
-        shuffledList.pop();
-        if (countChoice == 1) {
-          if (isShuffled) {
-            shuffledWordList[checkIndexVie] = shuffledList[checkIndexEng];
-          } else {
-            shuffledWordList[checkIndexVie] = shuffledList[isChoice.indexEng];
-            setCountCorrect(0);
-            setIsShuffled(true);
-          }
-        } else {
-          const random = Math.floor(Math.random() * 2) == 0;
-          setIsShuffled(random);
-          if (random) {
-            shuffledWordList[checkIndexVie] = shuffledList[isChoice.indexEng];
-            shuffledWordList[isChoice.indexVie] = shuffledList[checkIndexEng];
-          } else {
-            shuffledWordList[isChoice.indexVie] = shuffledList[isChoice.indexEng];
-            shuffledWordList[checkIndexVie] = shuffledList[shuffledList.length == 5 ? checkIndexEng : shuffledList.length - 1];
-          }
-        }
-        hanldeDisable(checkIndexEng, checkIndexVie, true);
-        setListWords(shuffledList);
-        setShuffledWord(shuffledWordList);
+    if (updatedHandleChoice === 10) {
+      if (updatedIdCompareEng === updatedIdCompareVie) {
+        handleCorrectChoice(updatedIndexEng, updatedIndexVie, updatedCountCorrect);
       } else {
-        setIsError({ error: true, indexEng: checkIndexEng, indexVie: checkIndexVie });
+        setIsError({ error: true, indexEng: updatedIndexEng, indexVie: updatedIndexVie });
       }
-      setIsChoiceEng(-1);
-      setIsChoiceVie(-1);
+      resetChoices();
     }
+  }
+
+  function handleCorrectChoice(indexEng: number, indexVie: number, countChoice: number) {
+    setIsError({ error: false, indexEng: -1, indexVie: -1 });
+    const updatedListWords = [...listWords];
+    const updatedShuffledWord = [...shuffledWord];
+    setIsChoice({ choice: true, indexEng, indexVie });
+    setCountCorrect(++countChoice);
+    hanldeDisable(isChoice.indexEng, isChoice.indexVie, false);
+    setTaskBarColor(prev => prev + maxlengthWord);
+
+    if (updatedListWords.length <= 5) {
+      disableEndState(indexEng, indexVie);
+      return;
+    }
+
+    updatedListWords[indexEng] = updatedListWords[updatedListWords.length - 1];
+    updatedListWords.pop();
+
+    if (countChoice === 1) {
+      handleFirstCorrectChoice(updatedShuffledWord, updatedListWords, indexVie);
+    } else {
+      handleSubsequentCorrectChoices(updatedShuffledWord, updatedListWords, indexEng, indexVie);
+    }
+
+    hanldeDisable(indexEng, indexVie, true);
+    setListWords(updatedListWords);
+    setShuffledWord(updatedShuffledWord);
+  }
+
+  function handleFirstCorrectChoice(shuffledWordList: FormattedListWord[], listWords: FormattedListWord[], indexVie: number) {
+    if (isShuffled) {
+      shuffledWordList[indexVie] = listWords[indexEng];
+    } else {
+      shuffledWordList[indexVie] = listWords[isChoice.indexEng];
+      setCountCorrect(0);
+      setIsShuffled(true);
+    }
+  }
+
+  function handleSubsequentCorrectChoices(shuffledWordList: FormattedListWord[], listWords: FormattedListWord[], indexEng: number, indexVie: number) {
+    const random = Math.random() < 0.5;
+    setIsShuffled(random);
+
+    if (random) {
+      shuffledWordList[indexVie] = listWords[isChoice.indexEng];
+      shuffledWordList[isChoice.indexVie] = listWords[indexEng];
+    } else {
+      shuffledWordList[isChoice.indexVie] = listWords[isChoice.indexEng];
+      shuffledWordList[indexVie] = listWords[listWords.length === 5 ? indexEng : listWords.length - 1];
+    }
+  }
+
+  function disableEndState(indexEng: number, indexVie: number) {
+    setEngEndState(prevState => {
+      const updatedState = [...prevState];
+      updatedState[indexEng].endDisable = true;
+      return updatedState;
+    });
+
+    setVieEndState(prevState => {
+      const updatedState = [...prevState];
+      updatedState[indexVie].endDisable = true;
+      return updatedState;
+    });
+  }
+
+  function resetChoices() {
+    setIsChoiceEng(-1);
+    setIsChoiceVie(-1);
   }
   
   if(taskBarColor >= 99.9){
@@ -236,9 +250,12 @@ export default function MatchingGame({
 
   return (
     <div className="!font-mono">
-      <div className="relative lg:mx-10 mt-5 mb-5 lg:mt-2 h-8">
-        <div className="mt-5 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500 absolute transition-all" style={{ width : `${taskBarColor + '%'}`}}></div>
-        <div className=" mt-5 h-8 border border-black w-full rounded-full absolute dark:border-white"></div>
+      <div className="relative lg:mx-10 mt-5 lg:mt-2 h-8">
+        <div
+          className="mt-5 h-4 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500 absolute transition-all sparkle-effect"
+          style={{ width: `${taskBarColor + '%'}` }}
+        ></div>
+        <div className="mt-5 h-4 border border-black w-full rounded-full absolute border-white"></div>
       </div>
       <div className="lg:mx-10 grid grid-cols-2 gap-5">
         <div>
@@ -250,15 +267,15 @@ export default function MatchingGame({
                 key={word.id + "ENG"}
                 onClick={() => {setIsChoiceEng(index);compareWord(Eng, word.compare_id, index, word.id)}}
                 className={clsx(
-                  "whitespace-nowrap flex justify-center items-center overflow-hidden text-autoSizeTextLearn opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 transition-all border w-full rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 focus:text-white hover:bg-blue-500 hover:text-white",
+                  "whitespace-nowrap flex justify-center items-center overflow-hidden text-autoSizeTextLearn opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 transition-all border w-full rounded-2xl p-5 cursor-pointer hover:shadow-lg border-white shadow-gray-400 lg:mt-4 focus:text-white hover:bg-blue-500 text-white",
                   {
-                    '!opacity-[1] !pointer-events-auto': !isDisEng[index].isDisable && !isEndEng[index].endDisable,
+                    '!opacity-[1] !pointer-events-auto': !engDisableState[index].isDisable && !engEndState[index].endDisable,
                     'bg-red-700 focus:bg-red-700': isError.error && isError.indexEng == index,
                     'bg-transparent': !isError.error && isError.indexEng !== index,
-                    '!opacity-50 !pointer-events-none': isEndEng[index].endDisable,
+                    '!opacity-50 !pointer-events-none': engEndState[index].endDisable,
                     '!bg-blue-500 hover:bg-blue-600': isChoiceEng == index
                   })}
-                disabled={isEndEng[index].endDisable}
+                disabled={engEndState[index].endDisable}
               >
                 {word.english_word}
               </button>
@@ -274,15 +291,15 @@ export default function MatchingGame({
                 key={word.id + "ENG"}
                 onClick={() => {setIsChoiceVie(index);compareWord(Vie, word.compare_id, index, word.id)}}
                 className={clsx(
-                  "whitespace-nowrap flex justify-center items-center overflow-hidden text-autoSizeTextLearn opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 transition-all w-full border rounded-2xl p-5 cursor-pointer border-black hover:shadow-lg dark:border-white dark:shadow-gray-400 lg:mt-4 focus:text-white hover:bg-blue-500 hover:text-white",
+                  "whitespace-nowrap flex justify-center items-center overflow-hidden text-autoSizeTextLearn opacity-[0] animate-undisable-word pointer-events-none text-center mt-5 transition-all border w-full rounded-2xl p-5 cursor-pointer hover:shadow-lg border-white shadow-gray-400 lg:mt-4 focus:text-white hover:bg-blue-500 text-white",
                   {
-                    '!opacity-[1] !pointer-events-auto': !isDisVie[index].isDisable && !isEndVie[index].endDisable,
+                    '!opacity-[1] !pointer-events-auto': !vieDisableState[index].isDisable && !vieEndState[index].endDisable,
                     'bg-red-700 focus:bg-red-700': isError.error && isError.indexVie == index,
                     'bg-transparent': !isError.error && isError.indexVie !== index,
-                    '!opacity-50 !pointer-events-none': isEndVie[index].endDisable,
+                    '!opacity-50 !pointer-events-none': vieEndState[index].endDisable,
                     '!bg-blue-500 hover:bg-blue-600': isChoiceVie == index
                   })}
-                disabled={isEndVie[index].endDisable}
+                disabled={vieEndState[index].endDisable}
               >
                 {word.vietnamese_word}
               </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -19,17 +19,37 @@ export default function Render({
 }: {
   listWord: FormattedListWord[];
 }) {
-  const { addMore, count, words, loading, loadingMore } = useWordStore();
+  const { reloadGetAll, count, words, loading, loadingMore } = useWordStore();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredWords, setFilteredWords] = useState(listWord);
+
+  useEffect(() => {
+    setFilteredWords(
+      listWord.filter((word) =>
+        word.vietnamese_word.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        word.english_word.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [searchTerm, listWord]);
 
   return (
     <div className="py-5">
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full p-2 border rounded-md dark:border-white"
+        />
+      </div>
       <div className="rounded-md border border-white h-[70svh]">
         {loading ? (
           <Loading />
         ) : (
           <ScrollArea className=" h-[70svh] w-full">
             <div className="lg:grid lg:grid-cols-3 md:grid md:grid-cols-2">
-              {listWord.map((word) => (
+              {filteredWords.map((word) => (
                 <ResizablePanelGroup
                   key={word.id}
                   direction="horizontal"
@@ -57,7 +77,7 @@ export default function Render({
               <div className={clsx("flex", { hidden: count == words.length })}>
                 <Button
                   variant="ghost"
-                  onClick={addMore}
+                  onClick={reloadGetAll}
                   className="text-white hover:bg-transparent hover:text-white"
                 >
                   View more ...

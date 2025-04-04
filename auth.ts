@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt';
 import { getUserByEmail } from './lib/usecases/auth.usecase';
 
 export const {
-    handlers: { GET, POST },
+    handlers,
     auth,
     signIn,
     signOut,
@@ -68,7 +68,8 @@ export const {
     },
     session: {
         strategy: 'jwt',
-        maxAge: 30, // 30 days
+        maxAge: 60 * 60, // 30 days
     },
-    secret: process.env.NEXTAUTH_SECRET,
+    trustHost: true,
+    secret: process.env.AUTH_SECRET,
 });

@@ -1,31 +1,29 @@
 'use client'
 
-import { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Render from './render';
 import { useWordStore } from '$root/stores/useListWord';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
 import AddWord from './add-word';
 import clsx from 'clsx';
 
-enum listConten {
+enum listContent {
   LIST_WORD = 'LIST_WORD',
   ADD_WORD = 'ADD_WORD',
 }
 
 export default function Page() {
-  const { words, init } = useWordStore();
-  const [content, setContet] = useState<string>(listConten.LIST_WORD);
+  const { words, getAll, isReload } = useWordStore();
+  const [content, setContet] = useState<string>(listContent.LIST_WORD);
   useEffect(() => {
-    if (words.length == 0) {
-      init();
-    }
-  }, [words, init])
+    !isReload && getAll();
+  }, [isReload, getAll])
 
   return (
     <Tabs defaultValue="list-word" className="w-full">
       <TabsList className="grid w-full h-14 grid-cols-2 bg-secondary dark:bg-dark-hover-button p-2 rounded-xl gap-4">
-        <TabsTrigger value="list-word" onClick={() => setContet(listConten.LIST_WORD)} className={clsx('text-[#4e54c8] dark:text-white', { '!text-white bg-[#4e54c8] dark:bg-black rounded-lg': content == listConten.LIST_WORD })}>List Word</TabsTrigger>
-        <TabsTrigger value="add-word" onClick={() => setContet(listConten.ADD_WORD)} className={clsx('text-[#4e54c8] dark:text-white', { '!text-white bg-[#4e54c8] dark:bg-black rounded-lg': content == listConten.ADD_WORD })}>Add Word</TabsTrigger>
+        <TabsTrigger value="list-word" onClick={() => setContet(listContent.LIST_WORD)} className={clsx('text-[#4e54c8] dark:text-white', { '!text-white bg-[#4e54c8] dark:bg-black rounded-lg': content == listContent.LIST_WORD })}>List Word</TabsTrigger>
+        <TabsTrigger value="add-word" onClick={() => setContet(listContent.ADD_WORD)} className={clsx('text-[#4e54c8] dark:text-white', { '!text-white bg-[#4e54c8] dark:bg-black rounded-lg': content == listContent.ADD_WORD })}>Add Word</TabsTrigger>
       </TabsList>
       <TabsContent value="list-word">
         <Render listWord={words} />

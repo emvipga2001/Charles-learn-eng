@@ -8,6 +8,12 @@
       "command": "npm run dev"
     },
     {
+      "name": "Next.js: debug server-side production",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run build && NODE_OPTIONS='--inspect' npm run start"
+    },
+    {
       "name": "Next.js: debug client-side",
       "type": "chrome",
       "request": "launch",
