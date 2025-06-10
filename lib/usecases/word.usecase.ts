@@ -4,25 +4,33 @@ import { z } from "zod";
 import { getDb } from "$root/lib/adapters/mongodb";
 import { FormSchema } from "../entities/definitions";
 
-
-export async function getListWordRandom() {
+export async function getListWordRandom(typeId: number) {
   const db = await getDb();
-  const getDataCollection = await db.collection('db_words').aggregate([{ $sample: { size: 20 } }]).toArray();
+  const getDataCollection = await db.collection('db_words')
+    .aggregate([
+      { $match: { type_id: typeId } },
+      { $sample: { size: 20 } }
+    ]).toArray();
   const validatedData = z.array(FormSchema).parse(getDataCollection);
   return validatedData;
 }
 
-export async function getListWordLimit(limit: number) {
+export async function getListWordLimit(limit: number, typeId: number) {
   const db = await getDb();
-  const getDataCollection = await db.collection('db_words').find({}).limit(limit).toArray();
+  const getDataCollection = await db.collection('db_words')
+    .find({ type_id: typeId })
+    .limit(limit)
+    .toArray();
   const validatedData = z.array(FormSchema).parse(getDataCollection);
-  const getCountDocuments = await db.collection('db_words').countDocuments();
+  const getCountDocuments = await db.collection('db_words')
+    .countDocuments({ type_id: typeId });
   return [validatedData, getCountDocuments] as const;
 }
 
-export async function insertWord(eng: string, vn: string) {
+export async function insertWord(eng: string, vn: string, typeId: number) {
   const db = await getDb();
-  const lastDoc = await db.collection('db_words').findOne({}, { sort: { id: -1 } });
+  const lastDoc = await db.collection('db_words')
+    .findOne({ type_id: typeId }, { sort: { id: -1 } });
   if (!lastDoc) {
     return false;
   }
@@ -32,7 +40,8 @@ export async function insertWord(eng: string, vn: string) {
       id: newId,
       compare_id: newId,
       english_word: eng,
-      vietnamese_word: vn
+      vietnamese_word: vn,
+      type_id: typeId
     });
     return true;
   } catch (error) {
@@ -40,10 +49,11 @@ export async function insertWord(eng: string, vn: string) {
   }
 }
 
-export async function editWord(eng: string, vn: string, id: number) {
+export async function editWord(eng: string, vn: string, id: number, typeId: number) {
   const db = await getDb();
   await db.collection('db_words').updateOne({
-    id: id
+    id: id,
+    type_id: typeId
   }, {
     $set: {
       english_word: eng,
@@ -57,10 +67,11 @@ export async function editWord(eng: string, vn: string, id: number) {
   });
 }
 
-export async function deleteWord(id: number) {
+export async function deleteWord(id: number, typeId: number) {
   const db = await getDb();
   await db.collection('db_words').deleteOne({
-    id: id
+    id: id,
+    type_id: typeId
   }).catch(() => {
     return false;
   }
