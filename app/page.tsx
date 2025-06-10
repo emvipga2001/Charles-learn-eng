@@ -9,7 +9,7 @@ export default async function Page() {
     <div className="mx-auto text-center p-5 text-black text-white transition-colors">
       <h1 className="text-4xl font-bold mb-4">Welcome to Charles Learn English</h1>
       <p className="text-lg mb-6">
-        Improve your English skills with personalized lessons and resources.
+        Improve your English/Japanse skills with personalized lessons and resources.
       </p>
       <Link href={session?.user ? "/home" : "/login"} className="whitespace-nowrap">
         <Button>
