@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "./components/ui/button";
 import { auth } from "../auth";
 
-// Dùng làm trang pagelanding
+// pagelanding
 export default async function Page() {
   const session = await auth();
   return (
