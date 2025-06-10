@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import MatchingGame from "./games/matching-game";
 import Hangman from "./games/hangman-game";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowBigRightIcon } from "lucide-react";
 import { FormattedListWord } from "$root/lib/entities/definitions";
 
