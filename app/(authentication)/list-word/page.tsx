@@ -13,8 +13,17 @@ enum listConten {
 }
 
 export default function Page() {
-  const { words, init } = useWordStore();
+  const { words, init, type } = useWordStore();
   const [content, setContet] = useState<string>(listConten.LIST_WORD);
+  
+  useEffect(() => {
+    // Initialize type from cookies on client-side
+    const cookieType = document.cookie.split('; ').find(row => row.startsWith('wordType='))?.split('=')[1];
+    if (cookieType && parseInt(cookieType) !== type) {
+      useWordStore.getState().setType(parseInt(cookieType));
+    }
+  }, []);
+
   useEffect(() => {
     if (words.length == 0) {
       init();

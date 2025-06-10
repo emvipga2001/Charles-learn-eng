@@ -28,7 +28,7 @@ export const useWordStore = create<limitWord>()((set, get) => ({
     loadingInsert: false,
     error: false,
     count: 0,
-    type: parseInt(document.cookie.split('; ').find(row => row.startsWith('wordType='))?.split('=')[1] || '1'),
+    type: 1, // Default type, will be updated on client-side
     init: async () => {
         set({ loading: true, error: false });
         try {
@@ -71,7 +71,9 @@ export const useWordStore = create<limitWord>()((set, get) => ({
     },
     setType: async (typeId: number) => {
         set({ type: typeId });
-        document.cookie = `wordType=${typeId}; path=/; max-age=31536000`;
+        if (typeof document !== 'undefined') {
+            document.cookie = `wordType=${typeId}; path=/; max-age=31536000`;
+        }
         await get().init();
     },
 }))
